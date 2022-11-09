@@ -47,7 +47,7 @@ int main()
 
 void menu()
 {
-    printf("[1] Abash\n");
+    printf("[1] Start\n");
     printf("[2] Exit\n");
 }
 
