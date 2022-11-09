@@ -75,28 +75,28 @@ void menu()
 
 char *shift(char plain_text[], int shift_val)
 {
-    char *cipher_text = (char *)calloc(strlen(plain_text), sizeof(char));
+    char *new_text = (char *)calloc(strlen(plain_text), sizeof(char));
     int i;
 
     for (i = 0; i < strlen(plain_text); i++)
     {
         if (islower(plain_text[i]))
         {
-            cipher_text[i] = ((plain_text[i] + shift_val - 'a') % MAX_ALPHA) + 'a';
+            new_text[i] = ((plain_text[i] + shift_val - 'a') % MAX_ALPHA) + 'a';
         }
         else if (isupper(plain_text[i]))
         {
-            cipher_text[i] = ((plain_text[i] + shift_val - 'A') % MAX_ALPHA) + 'A';
+            new_text[i] = ((plain_text[i] + shift_val - 'A') % MAX_ALPHA) + 'A';
         }
         else if (isdigit(plain_text[i]))
         {
-            cipher_text[i] = ((plain_text[i] + shift_val - '0') % MAX_NUM) + '0';
+            new_text[i] = ((plain_text[i] + shift_val - '0') % MAX_NUM) + '0';
         }
         else
         {
-            cipher_text[i] = plain_text[i];
+            new_text[i] = plain_text[i];
         }
     }
 
-    return cipher_text;
+    return new_text;
 }
