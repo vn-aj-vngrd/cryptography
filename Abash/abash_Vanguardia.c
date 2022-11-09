@@ -30,15 +30,6 @@ int main()
         }
         else if (choice == 2)
         {
-            printf("Input text: ");
-            scanf("%[^\n]", &plain_text);
-            fflush(stdin);
-
-            char *decrypted_text = abash(plain_text);
-            printf("Result: %s", decrypted_text);
-        }
-        else if (choice == 3)
-        {
             printf("Thank you for using this program.");
             break;
         }
@@ -56,9 +47,8 @@ int main()
 
 void menu()
 {
-    printf("[1] Encrypt\n");
-    printf("[2] Decrypt\n");
-    printf("[3] Exit\n");
+    printf("[1] Abash\n");
+    printf("[2] Exit\n");
 }
 
 char *abash(char plain_text[])
