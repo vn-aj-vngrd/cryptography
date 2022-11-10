@@ -11,7 +11,7 @@ char *shift(char[], int);
 
 int main()
 {
-    char plain_text[999];
+    char plain_text[99];
     int choice;
     int shift_val;
 
@@ -19,7 +19,6 @@ int main()
     {
         menu();
 
-        printf("\nSelect: ");
         scanf("%d", &choice);
         fflush(stdin);
 
@@ -71,11 +70,12 @@ void menu()
     printf("[1] Encrypt\n");
     printf("[2] Decrypt\n");
     printf("[3] Exit\n");
+    printf("\nSelect: ");
 }
 
 char *shift(char plain_text[], int shift_val)
 {
-    char *transformed_text = (char *)calloc(strlen(plain_text), sizeof(char));
+    char *transformed_text = (char *)calloc(strlen(plain_text) + 1, sizeof(char));
     int i;
 
     for (i = 0; i < strlen(plain_text); i++)

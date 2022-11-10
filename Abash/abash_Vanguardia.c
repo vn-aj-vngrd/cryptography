@@ -15,7 +15,6 @@ int main()
     {
         menu();
 
-        printf("\nSelect: ");
         scanf("%d", &choice);
         fflush(stdin);
 
@@ -49,11 +48,12 @@ void menu()
 {
     printf("[1] Start\n");
     printf("[2] Exit\n");
+    printf("\nSelect: ");
 }
 
 char *abash(char plain_text[])
 {
-    char *transformed_text = (char *)calloc(strlen(plain_text), sizeof(char));
+    char *transformed_text = (char *)calloc(strlen(plain_text) + 1, sizeof(char));
     int i;
 
     for (i = 0; i < strlen(plain_text); i++)
