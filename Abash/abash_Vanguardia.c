@@ -8,7 +8,7 @@ char *abash(char[]);
 
 int main()
 {
-    char plain_text[999];
+    char plain_text[99];
     int choice;
 
     do
@@ -25,8 +25,8 @@ int main()
             scanf("%[^\n]", &plain_text);
             fflush(stdin);
 
-            char *encrypted_text = abash(plain_text);
-            printf("Result: %s", encrypted_text);
+            char *transformed_text = abash(plain_text);
+            printf("Result: %s", transformed_text);
         }
         else if (choice == 2)
         {
@@ -53,24 +53,24 @@ void menu()
 
 char *abash(char plain_text[])
 {
-    char *new_text = (char *)calloc(strlen(plain_text), sizeof(char));
+    char *transformed_text = (char *)calloc(strlen(plain_text), sizeof(char));
     int i;
 
     for (i = 0; i < strlen(plain_text); i++)
     {
         if (islower(plain_text[i]))
         {
-            new_text[i] = 'z' - (plain_text[i] - 'a');
+            transformed_text[i] = 'z' - (plain_text[i] - 'a');
         }
         else if (isupper(plain_text[i]))
         {
-            new_text[i] = 'Z' - (plain_text[i] - 'A');
+            transformed_text[i] = 'Z' - (plain_text[i] - 'A');
         }
         else
         {
-            new_text[i] = plain_text[i];
+            transformed_text[i] = plain_text[i];
         }
     }
 
-    return new_text;
+    return transformed_text;
 }

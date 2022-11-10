@@ -75,28 +75,28 @@ void menu()
 
 char *shift(char plain_text[], int shift_val)
 {
-    char *new_text = (char *)calloc(strlen(plain_text), sizeof(char));
+    char *transformed_text = (char *)calloc(strlen(plain_text), sizeof(char));
     int i;
 
     for (i = 0; i < strlen(plain_text); i++)
     {
         if (islower(plain_text[i]))
         {
-            new_text[i] = ((plain_text[i] + shift_val - 'a') % MAX_ALPHA) + 'a';
+            transformed_text[i] = ((plain_text[i] + shift_val - 'a') % MAX_ALPHA) + 'a';
         }
         else if (isupper(plain_text[i]))
         {
-            new_text[i] = ((plain_text[i] + shift_val - 'A') % MAX_ALPHA) + 'A';
+            transformed_text[i] = ((plain_text[i] + shift_val - 'A') % MAX_ALPHA) + 'A';
         }
         else if (isdigit(plain_text[i]))
         {
-            new_text[i] = ((plain_text[i] + shift_val - '0') % MAX_NUM) + '0';
+            transformed_text[i] = ((plain_text[i] + shift_val - '0') % MAX_NUM) + '0';
         }
         else
         {
-            new_text[i] = plain_text[i];
+            transformed_text[i] = plain_text[i];
         }
     }
 
-    return new_text;
+    return transformed_text;
 }
