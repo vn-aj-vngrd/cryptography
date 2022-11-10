@@ -53,23 +53,41 @@ void menu()
     printf("\nSelect: ");
 }
 
+/*
+ * This function will transform the given text to its abashed form.
+ *
+ * @param plain_text 
+ * @return transformed_text
+ *
+ * Example:
+ * Input: Hello World!
+ * Output: Svool Dliow!
+ */
 char *abash(char plain_text[])
 {
+    // Create an allocated memory for the transformed text.
     char *transformed_text = (char *)calloc(strlen(plain_text) + 1, sizeof(char));
     int i;
 
+    // Loop through the plain text.
     for (i = 0; i < strlen(plain_text); i++)
     {
+        // Check if the current character is a letter.
         if (islower(plain_text[i]))
         {
+            // Transform the letter to its abashed form.
+            // Example: a -> z, b -> y, c -> x, ..., z -> a
             transformed_text[i] = 'z' - (plain_text[i] - 'a');
         }
         else if (isupper(plain_text[i]))
         {
+            // Transform the letter to its abashed form.
+            // Example: A -> Z, B -> Y, C -> X, ..., Z -> A
             transformed_text[i] = 'Z' - (plain_text[i] - 'A');
         }
         else
         {
+            // If the current character is not a letter, just copy it.
             transformed_text[i] = plain_text[i];
         }
     }
