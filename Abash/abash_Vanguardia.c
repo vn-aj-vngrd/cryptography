@@ -3,12 +3,14 @@
 #include <string.h>
 #include <ctype.h>
 
+#define MAX_SIZE 255
+
 void menu();
 char *abash(char[]);
 
 int main()
 {
-    char plain_text[99];
+    char plain_text[MAX_SIZE];
     int choice;
 
     do

@@ -5,13 +5,14 @@
 
 #define MAX_ALPHA 26
 #define MAX_NUM 10
+#define MAX_SIZE 255
 
 void menu();
 char *shift(char[], int);
 
 int main()
 {
-    char plain_text[99];
+    char plain_text[MAX_SIZE];
     int choice;
     int shift_val;
 
