@@ -45,7 +45,7 @@ int main()
             scanf("%d", &shift_val);
             fflush(stdin);
 
-            char *decrypted_text = shift(plain_text, (MAX_ALPHA - shift_val + MAX_ALPHA) % MAX_ALPHA);
+            char *decrypted_text = shift(plain_text, MAX_ALPHA - (shift_val % MAX_ALPHA));
             printf("Decrypted Text: %s", decrypted_text);
         }
         else if (choice == 3)
