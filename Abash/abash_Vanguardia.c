@@ -53,24 +53,24 @@ void menu()
 
 char *abash(char plain_text[])
 {
-    char *encrypted_text = (char *)calloc(strlen(plain_text), sizeof(char));
+    char *new_text = (char *)calloc(strlen(plain_text), sizeof(char));
     int i;
 
     for (i = 0; i < strlen(plain_text); i++)
     {
         if (islower(plain_text[i]))
         {
-            encrypted_text[i] = 'z' - (plain_text[i] - 'a');
+            new_text[i] = 'z' - (plain_text[i] - 'a');
         }
         else if (isupper(plain_text[i]))
         {
-            encrypted_text[i] = 'Z' - (plain_text[i] - 'A');
+            new_text[i] = 'Z' - (plain_text[i] - 'A');
         }
         else
         {
-            encrypted_text[i] = plain_text[i];
+            new_text[i] = plain_text[i];
         }
     }
 
-    return encrypted_text;
+    return new_text;
 }
