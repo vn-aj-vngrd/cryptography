@@ -89,10 +89,6 @@ char *shift(char plain_text[], int shift_val)
         {
             transformed_text[i] = ((plain_text[i] + shift_val - 'A') % MAX_ALPHA) + 'A';
         }
-        else if (isdigit(plain_text[i]))
-        {
-            transformed_text[i] = ((plain_text[i] + shift_val - '0') % MAX_NUM) + '0';
-        }
         else
         {
             transformed_text[i] = plain_text[i];
