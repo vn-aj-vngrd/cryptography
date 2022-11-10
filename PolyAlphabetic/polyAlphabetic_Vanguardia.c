@@ -36,10 +36,9 @@ int main()
             fflush(stdin);
 
             char *new_key = generateKey(text, key_val);
-            // printf("New Key: %s", new_key);
-
             char *encrypted_text = encrypt(text, new_key);
-            printf("\nEncrypted Text: %s", encrypted_text);
+
+            printf("Encrypted Text: %s", encrypted_text);
         }
         else if (choice == 2)
         {
@@ -52,10 +51,9 @@ int main()
             fflush(stdin);
 
             char *new_key = generateKey(text, key_val);
-            // printf("New Key: %s", new_key);
-
             char *decrypted_text = decrypt(text, new_key);
-            printf("\nDecrypted Text: %s", decrypted_text);
+
+            printf("Decrypted Text: %s", decrypted_text);
         }
         else if (choice == 3)
         {
@@ -82,66 +80,131 @@ void menu()
     printf("\nSelect: ");
 }
 
+/*
+ * Generates a key by the repition of the key_val
+ * until the length of the key is equal to the length of the plain_text
+ *
+ * @param plain_text
+ * @param key_val
+ *
+ * @return key
+ *
+ * @example
+ * text = "ATTACKATONCE"
+ * key_val = "LEMON"
+ * key = "LEMONLEMONLE"
+ *
+ */
+
 char *generateKey(char plain_text[], char key_val[])
 {
-    int i, j;
+    // Create an allocated space for the new_key text to be returned.
     char *new_key = (char *)calloc((strlen(plain_text) + 1), sizeof(char));
 
+    int i, j;
+    // Loop/Traverse through the plain_text and key_val.
     for (i = 0, j = 0; i < strlen(plain_text); i++)
     {
+        // If the key_val is traversed completely, go back to the first index
         if (j == strlen(key_val))
             j = 0;
 
-        new_key[i] = plain_text[i] == ' ' ? ' ' : toupper(key_val[j++]);
+        // If the plain_text is a space, add a space to the new_key.
+        //  Else, copy the uppercased character of key_val
+        new_key[i] = plain_text[i] == ' ' ? ' ' : key_val[j++] - 32;
     }
 
     return new_key;
 }
 
+/*
+ * Encrypts the plain_text using the key.
+ *
+ * @param plain_text
+ * @param key
+ * @return encrypted_text
+ *
+ * @example
+ * plain_text = "ATTACKATONCE"
+ * key = "LEMONLEMONLE"
+ * encrypted_text = "LXFOPVEFRNHR"
+ *
+ *
+ */
+
 char *encrypt(char plain_text[], char key[])
 {
+    // Create an allocated space for the encrypted text to be returned.
     char *encrypted_text = (char *)calloc(strlen(plain_text) + 1, sizeof(char));
     int i;
 
+    // Loop/Traverse through plain_text
     for (i = 0; i < strlen(plain_text); i++)
     {
-
+        // Formula: (plain_text[i] + key[i]) % 26
         if (islower(plain_text[i]))
         {
-            encrypted_text[i] = ((toupper(plain_text[i]) + key[i]) % MAX_ALPHA) + 'a';
-            encrypted_text[i] = tolower(encrypted_text[i]);
+            // Encrypt lowercase letters
+            // + 97 to get the ASCII value of the encrypted letter
+            // + 32 to get the lowercase letter
+            encrypted_text[i] = (((plain_text[i] - 32) + key[i]) % MAX_ALPHA) + 'a';
         }
         else if (isupper(plain_text[i]))
         {
+            // Encrypt uppercase letters
+            // Formula: (plain_text[i] + key[i]) % 26
+            // + 65 to get the ASCII value of the encrypted letter
             encrypted_text[i] = ((plain_text[i] + key[i]) % MAX_ALPHA) + 'A';
         }
         else
         {
+            // Copy non-alphabetic characters
             encrypted_text[i] = plain_text[i];
         }
     }
     return encrypted_text;
 }
 
+/*
+ * Decrypts the encrypted_text using the key.
+ *
+ * @param cipher_text
+ * @param key
+ * @return decrypted_text
+ *
+ * @example
+ * encrypted_text = "LXFOPVEFRNHR"
+ * key = "LEMONLEMONLE"
+ * decrypted_text = "ATTACKATONCE"
+ *
+ */
+
 char *decrypt(char cipher_text[], char key[])
 {
+    // Create an allocated space for the decrypted text to be returned.
     char *decrypted_text = (char *)calloc(strlen(cipher_text) + 1, sizeof(char));
     int i;
 
+    // Traverse cipher_text
     for (i = 0; i < strlen(cipher_text); i++)
     {
-
+        // Formula: (cipher_text[i] - key[i] + 26) % 26
         if (islower(cipher_text[i]))
         {
-            decrypted_text[i] = ((toupper(cipher_text[i]) - key[i] + MAX_ALPHA) % MAX_ALPHA) + 'a';
-            decrypted_text[i] = tolower(decrypted_text[i]);
+            // Decrypt lowercase letters
+            // + 97 to get the ASCII value of the decrypted letter
+            // + 32 to get the lowercase letter
+            decrypted_text[i] = (((cipher_text[i] - 32) - key[i] + MAX_ALPHA) % MAX_ALPHA) + 'a';
         }
         else if (isupper(cipher_text[i]))
         {
+            // Decrypt uppercase letters
+            // + 65 to get the ASCII value of the decrypted letter
             decrypted_text[i] = ((cipher_text[i] - key[i] + MAX_ALPHA) % MAX_ALPHA) + 'A';
         }
         else
         {
+            // Copy non-alphabetic characters
             decrypted_text[i] = cipher_text[i];
         }
     }
