@@ -107,12 +107,17 @@ char *generateKey(char key_val[])
     {
         for (j = 0; j < strlen(key_val); j++)
         {
+            // If the current letter is greater than the next letter
+            // then increment the key value.
             if (key_val[i] > key_val[j])
             {
                 k++;
             }
         }
+        // Convert the key value to a character and append it to the key.
         key[i] = k + '1';
+
+        // Reset the key value.
         k = 0;
     }
 
