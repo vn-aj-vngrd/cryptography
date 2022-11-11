@@ -91,11 +91,10 @@ void menu()
  *
  * @return key
  *
- * @example
+ * Example:
  * text = "HELLOWORLD"
  * key_val = "EARTH"
  * key = "EARTHEARTH"
- *
  */
 
 char *generateKey(char plain_text[], char key_val[])
@@ -126,12 +125,10 @@ char *generateKey(char plain_text[], char key_val[])
  * @param key
  * @return encrypted_text
  *
- * @example
+ * Example:
  * plain_text = "HELLOWORLD"
  * key = "EARTHEARTH"
  * encrypted_text = "FYWYPUICYE"
- *
- *
  */
 
 char *encrypt(char plain_text[], char key[])
@@ -174,11 +171,10 @@ char *encrypt(char plain_text[], char key[])
  * @param key
  * @return decrypted_text
  *
- * @example
+ * Example:
  * encrypted_text = "FYWYPUICYE"
  * key = "EARTH"
  * decrypted_text = "HELLOWORLD"
- *
  */
 
 char *decrypt(char cipher_text[], char key[])
