@@ -179,7 +179,7 @@ char *encrypt(char plain_text[], char key[])
             k++;
         }
     }
-
+    
     return cipher_text;
 }
 
