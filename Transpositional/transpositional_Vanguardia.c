@@ -136,14 +136,20 @@ char *generateKey(char key_val[])
 char *encrypt(char plain_text[], char key[])
 {
     int row = strlen(plain_text) / strlen(key);
+    // If the length of the plain text is not divisible by the length of the key, add 1 to the row.
     if (strlen(plain_text) % strlen(key) != 0)
         row++;
+
     int col = strlen(key);
 
+    // Create an allocated memory for the cipher text.
     char *cipher_text = (char *)calloc((row * col) + 1, sizeof(char));
+
+    // Create a 2D array to store the plain text.
     char matrix[row][col];
     int i, j, k;
 
+    // Initialize the matrix with the plain text.
     k = 0;
     for (i = 0; i < row; i++)
     {
@@ -161,6 +167,7 @@ char *encrypt(char plain_text[], char key[])
         }
     }
 
+    // Display the matrix.
     for (i = 0; i < row; i++)
     {
         for (j = 0; j < col; j++)
@@ -170,16 +177,19 @@ char *encrypt(char plain_text[], char key[])
         printf("\n");
     }
 
+    // Encrypt the plain text.
     k = 0;
     for (i = 0; i < col; i++)
     {
         for (j = 0; j < row; j++)
         {
+            // Get the column number of the key.
+            // Store the value to the cipher text.
             cipher_text[k] = matrix[j][key[i] - '1'];
             k++;
         }
     }
-    
+
     return cipher_text;
 }
 
@@ -202,20 +212,27 @@ char *decrypt(char cipher_text[], char key[])
     int row = strlen(cipher_text) / strlen(key);
     int col = strlen(key);
 
+    // Create an allocated memory for the plain text.
     char *plain_text = (char *)calloc((row * col) + 1, sizeof(char));
+
+    // Create a 2D array to store the cipher text.
     char matrix[row][col];
     int i, j, k;
 
+    // Initialize the matrix with the cipher text.
     k = 0;
     for (i = 0; i < col; i++)
     {
         for (j = 0; j < row; j++)
         {
+            // Get the column number of the key.
+            // Store the value to the matrix.
             matrix[j][key[i] - '1'] = cipher_text[k];
             k++;
         }
     }
 
+    // Display the matrix.
     for (i = 0; i < row; i++)
     {
         for (j = 0; j < col; j++)
@@ -225,11 +242,13 @@ char *decrypt(char cipher_text[], char key[])
         printf("\n");
     }
 
+    // Decrypt the cipher text.
     k = 0;
     for (i = 0; i < row; i++)
     {
         for (j = 0; j < col; j++)
         {
+            // Store the value to the plain text.
             plain_text[k] = matrix[i][j];
             k++;
         }
