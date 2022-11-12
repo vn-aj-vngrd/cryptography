@@ -3,8 +3,6 @@
 #include <string.h>
 #include <ctype.h>
 
-#define MAX_ALPHA 26
-#define MAX_NUM 10
 #define MAX_SIZE 255
 
 void menu();
