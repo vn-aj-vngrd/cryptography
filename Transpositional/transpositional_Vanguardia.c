@@ -138,7 +138,7 @@ char *generateKey(char key_val[])
  * text = "Hello World"
  * key_val = "Lock"
  * generated_key: 1423
- * encrypted_text = "lWdlo_Hore_l"
+ * encrypted_text = "HorlWdlo_e_l"
  */
 
 char *encrypt(char plain_text[], char key[])
@@ -220,7 +220,7 @@ char *encrypt(char plain_text[], char key[])
  * @return decrypted_text
  *
  * Example
- * text = "lWdlo_Hore_l"
+ * text = "HorlWdlo_e_l"
  * key_val = "Lock"
  * generated_key: 1423
  * decrypted_text = "Hello_World_"
