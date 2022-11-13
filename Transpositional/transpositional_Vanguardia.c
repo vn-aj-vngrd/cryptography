@@ -188,22 +188,19 @@ char *encrypt(char plain_text[], char key[])
     k = 0;
     for (i = 0; i < col; i++)
     {
+        int key_idx;
+        for (j = 0; strlen(key); j++)
+        {
+            if (key[j] == i + '1')
+            {
+                key_idx = j;
+                break;
+            }
+        }
+
         for (j = 0; j < row; j++)
         {
-            // get key val index position of the
-            int key_val, l;
-            for (l = 0; i < strlen(key); l++)
-            {
-                if (key[l] == i + '1')
-                {
-                    key_val = l;
-                    break;
-                }
-            }
-
-            // Get the column number of the key.
-            // Store the value to the cipher text.
-            cipher_text[k] = matrix[j][key_val];
+            cipher_text[k] = matrix[j][key_idx];
             k++;
         }
     }
@@ -235,17 +232,25 @@ char *decrypt(char cipher_text[], char key[])
 
     // Create a 2D array to store the cipher text.
     char matrix[row][col];
-    int i, j, k;
+    int i, j, k, l;
 
     // Initialize the matrix with the cipher text.
     k = 0;
     for (i = 0; i < col; i++)
     {
+        int key_idx;
+        for (j = 0; strlen(key); j++)
+        {
+            if (key[j] == i + '1')
+            {
+                key_idx = j;
+                break;
+            }
+        }
+
         for (j = 0; j < row; j++)
         {
-            // Get the column number of the key.
-            // Store the value to the matrix.
-            matrix[j][key[i] - '1'] = cipher_text[k];
+            matrix[j][key_idx] = cipher_text[k];
             k++;
         }
     }
@@ -266,8 +271,7 @@ char *decrypt(char cipher_text[], char key[])
     {
         for (j = 0; j < col; j++)
         {
-            // Store the value to the plain text.
-            plain_text[k] = matrix[i][j];
+            plain_text[k] = matrix[i][j] == '_' ? ' ' : matrix[i][j];
             k++;
         }
     }
