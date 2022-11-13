@@ -5,7 +5,7 @@
 
 #define MAX_SIZE 255
 
-void menu();
+int menu();
 char *generateKey(char[]);
 char *encrypt(char[], char[]);
 char *decrypt(char[], char[]);
@@ -18,10 +18,7 @@ int main()
 
     do
     {
-        menu();
-
-        scanf("%d", &choice);
-        fflush(stdin);
+        choice = menu();
 
         if (choice == 1)
         {
@@ -74,10 +71,17 @@ int main()
 
 void menu()
 {
+    int choice;
+
     printf("[1] Encrypt\n");
     printf("[2] Decrypt\n");
     printf("[3] Exit\n");
     printf("\nSelect: ");
+
+    scanf("%d", &choice);
+    fflush(stdin);
+
+    return choice;
 }
 
 /*

@@ -7,7 +7,7 @@
 #define MAX_NUM 10
 #define MAX_SIZE 255
 
-void menu();
+int menu();
 char *shift(char[], int);
 
 int main()
@@ -19,9 +19,6 @@ int main()
     do
     {
         menu();
-
-        scanf("%d", &choice);
-        fflush(stdin);
 
         if (choice == 1)
         {
@@ -66,12 +63,19 @@ int main()
     return 0;
 }
 
-void menu()
+int menu()
 {
+    int choice;
+
     printf("[1] Encrypt\n");
     printf("[2] Decrypt\n");
     printf("[3] Exit\n");
     printf("\nSelect: ");
+
+    scanf("%d", &choice);
+    fflush(stdin);
+
+    return choice;
 }
 
 /*

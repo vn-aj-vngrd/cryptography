@@ -5,7 +5,7 @@
 
 #define MAX_SIZE 255
 
-void menu();
+int menu();
 char *abash(char[]);
 
 int main()
@@ -15,10 +15,7 @@ int main()
 
     do
     {
-        menu();
-
-        scanf("%d", &choice);
-        fflush(stdin);
+        choice = menu();
 
         if (choice == 1)
         {
@@ -46,17 +43,24 @@ int main()
     return 0;
 }
 
-void menu()
+int menu()
 {
+    int choice;
+
     printf("[1] Start\n");
     printf("[2] Exit\n");
     printf("\nSelect: ");
+
+    scanf("%d", &choice);
+    fflush(stdin);
+
+    return choice;
 }
 
 /*
  * This function will transform the given text to its abashed form.
  *
- * @param plain_text 
+ * @param plain_text
  * @return transformed_text
  *
  * Example:
