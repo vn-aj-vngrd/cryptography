@@ -4,7 +4,6 @@
 #include <ctype.h>
 
 #define MAX_ALPHA 26
-#define MAX_NUM 10
 #define MAX_SIZE 255
 
 int menu();
@@ -18,7 +17,7 @@ int main()
 
     do
     {
-        menu();
+        choice = menu();
 
         if (choice == 1)
         {
@@ -102,22 +101,14 @@ char *shift(char plain_text[], int shift_val)
     char *transformed_text = (char *)calloc(strlen(plain_text) + 1, sizeof(char));
     int i;
 
-    // Loop through the plain text.
+    // Loop through the text.
     for (i = 0; i < strlen(plain_text); i++)
     {
-        if (islower(plain_text[i]))
+        // Formula: (x + n) mod 26
+        if (isalpha(plain_text[i]))
         {
-            // If the character is a lowercase letter.
-            // Formula: (plain_text[i] + shift_val - 'a') % MAX_ALPHA + 'a'
-            // Example: ('a' + 3 - 'a') % 26 + 'a' = 3 % 26 + 'a' = 3 + 'a' = 'd'
-            transformed_text[i] = ((plain_text[i] + shift_val - 'a') % MAX_ALPHA) + 'a';
-        }
-        else if (isupper(plain_text[i]))
-        {
-            // If the character is an uppercase letter.
-            // Formula: (plain_text[i] + shift_val - 'A') % MAX_ALPHA + 'A'
-            // Example: ('A' + 3 - 'A') % 26 + 'A' = 3 % 26 + 'A' = 3 + 'A' = 'D'
-            transformed_text[i] = ((plain_text[i] + shift_val - 'A') % MAX_ALPHA) + 'A';
+            transformed_text[i] = islower(plain_text[i]) ? ((plain_text[i] + shift_val - 'a') % MAX_ALPHA) + 'a'
+                                                         : ((plain_text[i] + shift_val - 'A') % MAX_ALPHA) + 'A';
         }
         else
         {

@@ -76,7 +76,6 @@ char *abash(char plain_text[])
     // Loop through the plain text.
     for (i = 0; i < strlen(plain_text); i++)
     {
-        // Check if the current character is a letter.
         if (isalpha(plain_text[i]))
         {
             // Transform the letter to its abashed form.

@@ -4,7 +4,6 @@
 #include <ctype.h>
 
 #define MAX_ALPHA 26
-#define MAX_NUM 10
 #define MAX_SIZE 255
 
 int menu();
@@ -194,7 +193,8 @@ char *decrypt(char cipher_text[], char key[])
             int plain_val = (toupper(cipher_text[i]) - key[i] + MAX_ALPHA) % MAX_ALPHA;
 
             // Check if the letter is lowercase then return a lowercase letter else return an uppercase letter
-            decrypted_text[i] = islower(cipher_text[i]) ? (plain_val + 'a') : (plain_val + 'A');
+            decrypted_text[i] = islower(cipher_text[i]) ? (plain_val + 'a')
+                                                        : (plain_val + 'A');
         }
         else
         {
