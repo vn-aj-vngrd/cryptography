@@ -131,7 +131,7 @@ char *generateKey(char plain_text[], char key_val[])
  * Example:
  * plain_text = "HELLOWORLD"
  * key_val = "EARTH"
- * key = "EARTHEARTH"
+ * generated_key = "EARTHEARTH"
  * encrypted_text = "LECEVAOIEK"
  */
 
@@ -173,7 +173,7 @@ char *encrypt(char plain_text[], char key[])
  * Example:
  * encrypted_text = "LECEVAOIEK"
  * key_val = "EARTH"
- * key = "EARTHEARTH"
+ * generated_key = "EARTHEARTH"
  * decrypted_text = "HELLOWORLD"
  */
 
