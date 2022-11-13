@@ -69,7 +69,7 @@ int main()
     return 0;
 }
 
-void menu()
+int menu()
 {
     int choice;
 
