@@ -147,7 +147,7 @@ char *encrypt(char plain_text[], char key[])
         // Formula: (plain_text[i] + key[i]) % 26
         if (isalpha(plain_text[i]))
         {
-            // Encrypt letters using the formula
+            // Encrypt letter using the formula
             int cipher_val = (toupper(plain_text[i]) + key[i]) % MAX_ALPHA;
 
             // Check if the letter is lowercase then return a lowercase letter else return an uppercase letter
