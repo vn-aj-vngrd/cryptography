@@ -188,6 +188,7 @@ char *encrypt(char plain_text[], char key[])
     k = 0;
     for (i = 0; i < col; i++)
     {
+        // Get the index position of the key that corresponds to the iterator's value
         int key_idx;
         for (j = 0; strlen(key); j++)
         {
@@ -198,6 +199,7 @@ char *encrypt(char plain_text[], char key[])
             }
         }
 
+        // Get the row and column of the matrix that corresponds to the iterator's value and key index.
         for (j = 0; j < row; j++)
         {
             cipher_text[k] = matrix[j][key_idx];
@@ -238,6 +240,7 @@ char *decrypt(char cipher_text[], char key[])
     k = 0;
     for (i = 0; i < col; i++)
     {
+        // Get the index position of the key that corresponds to the iterator's value
         int key_idx;
         for (j = 0; strlen(key); j++)
         {
@@ -248,6 +251,7 @@ char *decrypt(char cipher_text[], char key[])
             }
         }
 
+        // Get the row and column of the matrix that corresponds to the iterator's value and key index.
         for (j = 0; j < row; j++)
         {
             matrix[j][key_idx] = cipher_text[k];
