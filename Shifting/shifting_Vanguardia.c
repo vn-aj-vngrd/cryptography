@@ -86,13 +86,15 @@ int menu()
  * @return transformed_text The encrypted or decrypted text.
  *
  * Example:
- *  plain_text = "Hello World"
- *  shift_val = 3
- *  transformed_text = "Khoor Zruog"
+ * - Encrypt
+ *      plain_text = "Hello World"
+ *      shift_val = 3
+ *      transformed_text = "Khoor Zruog"
  *
- *  plain_text = "Khoor Zruog"
- *  shift_val = 23
- *  transformed_text = "Hello World"
+ * - Decrypt
+ *      plain_text = "Khoor Zruog"
+ *      shift_val = 3
+ *      transformed_text = "Hello World"
  */
 
 char *shift(char plain_text[], int shift_val)
