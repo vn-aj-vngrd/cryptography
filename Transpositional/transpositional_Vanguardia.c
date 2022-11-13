@@ -190,9 +190,20 @@ char *encrypt(char plain_text[], char key[])
     {
         for (j = 0; j < row; j++)
         {
+            // get key val index position of the
+            int key_val, l;
+            for (l = 0; i < strlen(key); l++)
+            {
+                if (key[l] == i + '1')
+                {
+                    key_val = l;
+                    break;
+                }
+            }
+
             // Get the column number of the key.
             // Store the value to the cipher text.
-            cipher_text[k] = matrix[j][key[i] - '1'];
+            cipher_text[k] = matrix[j][key_val];
             k++;
         }
     }
