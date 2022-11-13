@@ -6,22 +6,20 @@
 #define MAX_SIZE 255
 #define MAX_ALPHA 26
 
-void menu();
+int menu();
 char *generateKey(char[]);
-char *vernam(char[], char[]);
+char *encrypt(char[], char[]);
+char *decrypt(char[], char[]);
 
 int main()
 {
-    char text[MAX_SIZE] = "COH";
-    char key_val[MAX_SIZE] = "SON";
-    int choice = 1;
+    char text[MAX_SIZE] = "KEKXD";
+    char key_val[MAX_SIZE] = "DAZMP";
+    int choice = 2;
 
     do
     {
-        // menu();
-
-        // scanf("%d", &choice);
-        // fflush(stdin);
+        //choice =  menu();
 
         if (choice == 1)
         {
@@ -36,8 +34,8 @@ int main()
             // char *key = generateKey(key_val);
             // printf("Generated Key: %s\n", key);
 
-            char *encrypted_text = vernam(text, key_val);
-            // printf("Encrypted Text: %s", encrypted_text);
+            char *encrypted_text = encrypt(text, key_val);
+            printf("\n\nEncrypted Text: %s", encrypted_text);
         }
         else if (choice == 2)
         {
@@ -49,10 +47,10 @@ int main()
             // scanf("%[^\n]", &key_val);
             // fflush(stdin);
 
-            char *key = generateKey(key_val);
-            printf("Generated Key: %s\n", key);
+            // char *key = generateKey(key_val);
+            // printf("Generated Key: %s\n", key);
 
-            char *decrypted_text = vernam(text, key);
+            char *decrypted_text = decrypt(text, key_val);
             printf("Decrypted Text: %s", decrypted_text);
         }
         else if (choice == 3)
@@ -74,12 +72,15 @@ int main()
     return 0;
 }
 
-void menu()
+int menu()
 {
     printf("[1] Encrypt\n");
     printf("[2] Decrypt\n");
     printf("[3] Exit\n");
     printf("\nSelect: ");
+
+    // scanf("%d", &choice);
+    // fflush(stdin);
 }
 
 char *generateKey(char key_val[])
@@ -89,25 +90,48 @@ char *generateKey(char key_val[])
     return key;
 }
 
-char *vernam(char plain_text[], char key[])
+char *encrypt(char plain_text[], char key[])
 {
     char *cipher_text = (char *)calloc((strlen(plain_text)) + 1, sizeof(char));
 
     int i, j, k = 0;
     for (i = 0; i < strlen(plain_text); i++)
     {
-        int text_val = plain_text[i] - 'A';
-        int key_val = key[i] - 'A';
+        if (isalpha(plain_text[i]))
+        {
+            int text_val = plain_text[i] - 'A';
+            int key_val = key[i] - 'A';
 
-        printf("%d\n%d", text_val, key_val);
-        int cipher_val = (text_val ^ key_val) % MAX_ALPHA;
-        printf("\n%d", cipher_val);
+            int sum = text_val + key_val;
+            if (sum >= MAX_ALPHA)
+                sum -= MAX_ALPHA;
 
-        cipher_text[k++] = cipher_val + 'A' -;
-        printf(cipher_text);
-
-        break;
+            cipher_text[i] = sum + 'A';
+        }
     }
 
     return cipher_text;
+}
+
+char *decrypt(char cipher_text[], char key[])
+{
+    char *plain_text = (char *)calloc((strlen(cipher_text)) + 1, sizeof(char));
+
+    int i, j, k = 0;
+    for (i = 0; i < strlen(cipher_text); i++)
+    {
+        if (isalpha(cipher_text[i]))
+        {
+            int text_val = cipher_text[i] - 'A';
+            int key_val = key[i] - 'A';
+
+            int sum = text_val - key_val;
+            if (sum < 0)
+                sum += MAX_ALPHA;
+
+            plain_text[i] = sum + 'A';
+        }
+    }
+
+    return plain_text;
 }
