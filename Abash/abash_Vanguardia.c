@@ -77,17 +77,13 @@ char *abash(char plain_text[])
     for (i = 0; i < strlen(plain_text); i++)
     {
         // Check if the current character is a letter.
-        if (islower(plain_text[i]))
+        if (isalpha(plain_text[i]))
         {
             // Transform the letter to its abashed form.
-            // Example: a -> z, b -> y, c -> x, ..., z -> a
-            transformed_text[i] = 'z' - (plain_text[i] - 'a');
-        }
-        else if (isupper(plain_text[i]))
-        {
-            // Transform the letter to its abashed form.
-            // Example: A -> Z, B -> Y, C -> X, ..., Z -> A
-            transformed_text[i] = 'Z' - (plain_text[i] - 'A');
+            // Example: a -> z, b -> y, c -> x, ..., z -> a and A -> Z, B -> Y, C -> X, ..., Z -> A
+            // Check if the letter is lowercase then return a lowercase letter else return an uppercase letter
+            transformed_text[i] = islower(plain_text[i]) ? 'z' - (plain_text[i] - 'a')
+                                                         : 'Z' - (plain_text[i] - 'A');
         }
         else
         {

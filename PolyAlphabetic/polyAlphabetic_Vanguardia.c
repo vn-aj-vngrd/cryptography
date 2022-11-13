@@ -131,8 +131,9 @@ char *generateKey(char plain_text[], char key_val[])
  *
  * Example:
  * plain_text = "HELLOWORLD"
+ * key_val = "EARTH"
  * key = "EARTHEARTH"
- * encrypted_text = "FYWYPUICYE"
+ * encrypted_text = "LECEVAOIEK"
  */
 
 char *encrypt(char plain_text[], char key[])
@@ -145,18 +146,13 @@ char *encrypt(char plain_text[], char key[])
     for (i = 0; i < strlen(plain_text); i++)
     {
         // Formula: (plain_text[i] + key[i]) % 26
-        if (islower(plain_text[i]))
+        if (isalpha(plain_text[i]))
         {
-            // Encrypt lowercase letters
-            // - 32 to convert it to an uppercase letter
-            // + 97 to get the ASCII value of the encrypted letter
-            encrypted_text[i] = (((plain_text[i] - 32) + key[i]) % MAX_ALPHA) + 'a';
-        }
-        else if (isupper(plain_text[i]))
-        {
-            // Encrypt uppercase letters
-            // + 65 to get the ASCII value of the encrypted letter
-            encrypted_text[i] = ((plain_text[i] + key[i]) % MAX_ALPHA) + 'A';
+            // Encrypt letters using the formula
+            int cipher_val = (toupper(plain_text[i]) + key[i]) % MAX_ALPHA;
+
+            // Check if the letter is lowercase then return a lowercase letter else return an uppercase letter
+            encrypted_text[i] = islower(plain_text[i]) ? (cipher_val + 'a') : (cipher_val + 'A');
         }
         else
         {
@@ -176,8 +172,9 @@ char *encrypt(char plain_text[], char key[])
  * @return decrypted_text
  *
  * Example:
- * encrypted_text = "FYWYPUICYE"
- * key = "EARTH"
+ * encrypted_text = "LECEVAOIEK"
+ * key_val = "EARTH"
+ * key = "EARTHEARTH"
  * decrypted_text = "HELLOWORLD"
  */
 
@@ -187,22 +184,17 @@ char *decrypt(char cipher_text[], char key[])
     char *decrypted_text = (char *)calloc(strlen(cipher_text) + 1, sizeof(char));
     int i;
 
-    // Traverse cipher_text
+    // Loop/Traverse through cipher_text
     for (i = 0; i < strlen(cipher_text); i++)
     {
         // Formula: (cipher_text[i] - key[i] + 26) % 26
-        if (islower(cipher_text[i]))
+        if (isalpha(cipher_text[i]))
         {
-            // Decrypt lowercase letters
-            // - 32 to convert it to an uppercase letter
-            // + 97 to get the ASCII value of the encrypted letter
-            decrypted_text[i] = (((cipher_text[i] - 32) - key[i] + MAX_ALPHA) % MAX_ALPHA) + 'a';
-        }
-        else if (isupper(cipher_text[i]))
-        {
-            // Decrypt uppercase letters
-            // + 65 to get the ASCII value of the decrypted letter
-            decrypted_text[i] = ((cipher_text[i] - key[i] + MAX_ALPHA) % MAX_ALPHA) + 'A';
+            // Decrypt letters using the formula
+            int plain_val = (toupper(cipher_text[i]) - key[i] + MAX_ALPHA) % MAX_ALPHA;
+
+            // Check if the letter is lowercase then return a lowercase letter else return an uppercase letter
+            decrypted_text[i] = islower(cipher_text[i]) ? (plain_val + 'a') : (plain_val + 'A');
         }
         else
         {
