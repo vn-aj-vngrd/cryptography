@@ -90,6 +90,15 @@ int menu()
     return choice;
 }
 
+/*
+ * This function encrypts and decrypts the text using the Vernam Cipher.
+ * The key must be of the same length or greater as the text.
+ *
+ * @param text The text to be encrypted or decrypted.
+ * @param key The key to be used for encryption or decryption.
+ * @return The encrypted or decrypted text.
+ */
+
 char *vernam(char plain_text[], char key[])
 {
     char *cipher_text = (char *)calloc((strlen(plain_text)) + 1, sizeof(char));
