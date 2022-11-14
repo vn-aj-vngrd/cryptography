@@ -10,7 +10,8 @@ char *abash(char[]);
 
 int main()
 {
-    char plain_text[MAX_SIZE];
+    char text[MAX_SIZE];
+    char filename[MAX_SIZE];
     int choice;
 
     do
@@ -19,12 +20,25 @@ int main()
 
         if (choice == 1)
         {
-            printf("Input text: ");
-            scanf("%[^\n]", &plain_text);
+            printf("Enter filename: ");
+            scanf("%[^\n]", &filename);
             fflush(stdin);
 
-            char *transformed_text = abash(plain_text);
+            FILE *file = fopen(strcat(filename, ".txt"), "r");
+            if (file == NULL)
+            {
+                printf("Error: Failed to opened the file.");
+                break;
+            }
+
+            while (fgets(text, sizeof(text), file) != NULL)
+            {
+            }
+
+            char *transformed_text = abash(text);
             printf("Result: %s", transformed_text);
+
+            fclose(file);
         }
         else if (choice == 2)
         {
@@ -46,8 +60,9 @@ int main()
 int menu()
 {
     int choice;
-
-    printf("[1] Start\n");
+    printf("Atbash Cryptography\n");
+    printf("--------------------\n");
+    printf("[1] Encrypt/Decrypt\n");
     printf("[2] Exit\n");
     printf("\nSelect: ");
 
@@ -76,11 +91,12 @@ char *abash(char plain_text[])
     // Loop through the plain text.
     for (i = 0; i < strlen(plain_text); i++)
     {
+        // Transform the letter to its abashed form.
+        // Example: a -> z, b -> y, c -> x, ..., z ->
         if (isalpha(plain_text[i]))
         {
-            // Transform the letter to its abashed form.
-            // Example: a -> z, b -> y, c -> x, ..., z -> a and A -> Z, B -> Y, C -> X, ..., Z -> A
-            // Check if the letter is lowercase then return a lowercase letter else return an uppercase letter
+            // If the letter is lowercase then return a lowercase letter
+            // else return an uppercase letter
             transformed_text[i] = islower(plain_text[i]) ? 'z' - (plain_text[i] - 'a')
                                                          : 'Z' - (plain_text[i] - 'A');
         }
