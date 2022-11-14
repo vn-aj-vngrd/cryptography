@@ -234,7 +234,7 @@ int getTextFromFile(char text[])
         return 0;
     }
 
-    fprintf(file, "%s", text);
+    fgets(text, MAX_SIZE, file);
     fclose(file);
 
     return 1;
