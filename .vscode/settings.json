@@ -3,6 +3,7 @@
   "files.associations": {
     "*.rmd": "markdown",
     "string.h": "c",
-    "stdlib.h": "c"
+    "stdlib.h": "c",
+    "ctype.h": "c"
   }
 }

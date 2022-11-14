@@ -13,6 +13,7 @@ char *decrypt(char[], char[]);
 int main()
 {
     char text[MAX_SIZE];
+    char filename[MAX_SIZE];
     char key_val[MAX_SIZE];
     int choice;
 
@@ -22,9 +23,20 @@ int main()
 
         if (choice == 1)
         {
-            printf("Input text: ");
-            scanf("%[^\n]", &text);
+            printf("Enter filename: ");
+            scanf("%[^\n]", &filename);
             fflush(stdin);
+
+            FILE *file = fopen(strcat(filename, ".txt"), "r");
+            if (file == NULL)
+            {
+                printf("Error: Failed to open the file.");
+                break;
+            }
+
+            while (fgets(text, sizeof(text), file) != NULL)
+            {
+            }
 
             printf("Input key: ");
             scanf("%[^\n]", &key_val);
@@ -35,12 +47,25 @@ int main()
 
             char *encrypted_text = encrypt(text, key);
             printf("Encrypted Text: %s", encrypted_text);
+
+            fclose(file);
         }
         else if (choice == 2)
         {
-            printf("Input text: ");
-            scanf("%[^\n]", &text);
+            printf("Enter filename: ");
+            scanf("%[^\n]", &filename);
             fflush(stdin);
+
+            FILE *file = fopen(strcat(filename, ".txt"), "r");
+            if (file == NULL)
+            {
+                printf("Error: Failed to open the file.");
+                break;
+            }
+
+            while (fgets(text, sizeof(text), file) != NULL)
+            {
+            }
 
             printf("Input key: ");
             scanf("%[^\n]", &key_val);
@@ -51,6 +76,8 @@ int main()
 
             char *decrypted_text = decrypt(text, key);
             printf("Decrypted Text: %s", decrypted_text);
+
+            fclose(file);
         }
         else if (choice == 3)
         {
@@ -73,6 +100,8 @@ int menu()
 {
     int choice;
 
+    printf("Transpositional Cryptograph\n");
+    printf("---------------------------\n");
     printf("[1] Encrypt\n");
     printf("[2] Decrypt\n");
     printf("[3] Exit\n");
@@ -92,12 +121,13 @@ int menu()
  * @return key
  *
  * Example
- * key_val = "Lock"
- *  L->3
- *  o->4
- *  c->1
- *  k->2
- * key = "3412"
+ * key_val = "Earth"
+ *  E->2
+ *  a->1
+ *  r->4
+ *  t->5
+ *  h->3
+ * key = "21453"
  */
 
 char *generateKey(char key_val[])
@@ -111,12 +141,12 @@ char *generateKey(char key_val[])
         {
             // If the current letter is greater than the next letter
             // then increment the key value.
-            if (key_val[i] > key_val[j])
+            if (toupper(key_val[i]) > toupper(key_val[j]))
             {
                 k++;
             }
         }
-        // Convert the key value to a character and append it to the key.
+        // Convert the key value to a digit character and append it to the key.
         key[i] = k + '1';
 
         // Reset the key value.
@@ -136,9 +166,9 @@ char *generateKey(char key_val[])
  *
  * Example
  * text = "Hello World"
- * key_val = "Lock"
- * generated_key: 1423
- * encrypted_text = "HorlWdlo_e_l"
+ * key_val = "Earth"
+ * generated_key: 21453
+ * encrypted_text = "eW!H_dol_lo_lr_"
  */
 
 char *encrypt(char plain_text[], char key[])
@@ -220,9 +250,9 @@ char *encrypt(char plain_text[], char key[])
  * @return decrypted_text
  *
  * Example
- * text = "HorlWdlo_e_l"
- * key_val = "Lock"
- * generated_key: 1423
+ * text = "eW!H_dol_lo_lr_"
+ * key_val = "Earth"
+ * generated_key: 21453
  * decrypted_text = "Hello_World_"
  */
 
