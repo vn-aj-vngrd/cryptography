@@ -317,10 +317,7 @@ int getTextFromFile(char text[])
         return 0;
     }
 
-    while (fgets(text, MAX_SIZE, file) != NULL)
-    {
-    }
-
+    fprintf(file, "%s", text);
     fclose(file);
 
     return 1;

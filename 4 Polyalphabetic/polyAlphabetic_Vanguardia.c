@@ -234,10 +234,7 @@ int getTextFromFile(char text[])
         return 0;
     }
 
-    while (fgets(text, MAX_SIZE, file) != NULL)
-    {
-    }
-
+    fprintf(file, "%s", text);
     fclose(file);
 
     return 1;
@@ -248,7 +245,7 @@ void saveTextToFile(char text[])
     char filename[MAX_SIZE];
 
     printf("Enter filename to save: ");
-    scanf("%[^\n]", filename);
+    scanf("%[^\n]", &filename);
     fflush(stdin);
 
     FILE *file = fopen(strcat(filename, ".txt"), "w");
