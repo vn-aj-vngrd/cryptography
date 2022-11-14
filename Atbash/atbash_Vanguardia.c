@@ -27,7 +27,7 @@ int main()
             FILE *file = fopen(strcat(filename, ".txt"), "r");
             if (file == NULL)
             {
-                printf("Error: Failed to opened the file.");
+                printf("Error: Failed to open the file.");
                 break;
             }
 
@@ -60,7 +60,8 @@ int main()
 int menu()
 {
     int choice;
-    printf("Atbash Cryptography\n");
+
+    printf("Atbash Cryptograph\n");
     printf("--------------------\n");
     printf("[1] Encrypt/Decrypt\n");
     printf("[2] Exit\n");

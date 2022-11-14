@@ -11,7 +11,8 @@ char *shift(char[], int);
 
 int main()
 {
-    char plain_text[MAX_SIZE];
+    char text[MAX_SIZE];
+    char filename[MAX_SIZE];
     int choice;
     int shift_val;
 
@@ -21,29 +22,56 @@ int main()
 
         if (choice == 1)
         {
-            printf("Input text: ");
-            scanf("%[^\n]", &plain_text);
+            printf("Enter filename: ");
+            scanf("%[^\n]", &filename);
             fflush(stdin);
 
-            printf("Input shift: ");
+            FILE *file = fopen(strcat(filename, ".txt"), "r");
+            if (file == NULL)
+            {
+                printf("Error: Failed to open the file.");
+                break;
+            }
+
+            while (fgets(text, sizeof(text), file) != NULL)
+            {
+            }
+
+            printf("Enter shift value: ");
             scanf("%d", &shift_val);
             fflush(stdin);
 
-            char *encrypted_text = shift(plain_text, shift_val);
+            char *encrypted_text = shift(text, shift_val);
             printf("Encrypted Text: %s", encrypted_text);
+
+            fclose(file);
         }
         else if (choice == 2)
         {
-            printf("Input text: ");
-            scanf("%[^\n]", &plain_text);
+
+            printf("Enter filename: ");
+            scanf("%[^\n]", &filename);
             fflush(stdin);
 
-            printf("Input shift: ");
+            FILE *file = fopen(strcat(filename, ".txt"), "r");
+            if (file == NULL)
+            {
+                printf("Error: Failed to open the file.");
+                break;
+            }
+
+            while (fgets(text, sizeof(text), file) != NULL)
+            {
+            }
+
+            printf("Enter shift value: ");
             scanf("%d", &shift_val);
             fflush(stdin);
 
-            char *decrypted_text = shift(plain_text, MAX_ALPHA - (shift_val % MAX_ALPHA));
+            char *decrypted_text = shift(text, MAX_ALPHA - (shift_val % MAX_ALPHA));
             printf("Decrypted Text: %s", decrypted_text);
+
+            fclose(file);
         }
         else if (choice == 3)
         {
@@ -66,6 +94,8 @@ int menu()
 {
     int choice;
 
+    printf("Shifting Cryptograph\n");
+    printf("--------------------\n");
     printf("[1] Encrypt\n");
     printf("[2] Decrypt\n");
     printf("[3] Exit\n");
