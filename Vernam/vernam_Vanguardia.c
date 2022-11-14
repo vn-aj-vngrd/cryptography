@@ -96,7 +96,19 @@ int menu()
  *
  * @param text The text to be encrypted or decrypted.
  * @param key The key to be used for encryption or decryption.
+ *
  * @return The encrypted or decrypted text.
+ *
+ * Example:
+ *  - Encrypt
+ *      text: Hello
+ *      key:  World
+ *      encrypted_text: Rk{an
+ *
+ *  - Decrypt
+ *      text: Rk{an
+ *      key:  World
+ *      decrypted_text: Hello
  */
 
 char *vernam(char plain_text[], char key[])
