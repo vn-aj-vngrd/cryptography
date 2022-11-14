@@ -303,6 +303,14 @@ char *decrypt(char cipher_text[], char key[])
     return plain_text;
 }
 
+/*
+ * This function gets the text from a file.
+ *
+ * @param text The text to be read from the file.
+ *
+ * @return 1 if the text is read successfully, 0 otherwise.
+ */
+
 int getTextFromFile(char text[])
 {
     char filename[MAX_SIZE];
@@ -319,9 +327,15 @@ int getTextFromFile(char text[])
 
     fgets(text, MAX_SIZE, file);
     fclose(file);
-    
+
     return 1;
 }
+
+/*
+ * This function saves the text to a file.
+ *
+ * @param text The text to be saved to the file.
+ */
 
 void saveTextToFile(char text[])
 {

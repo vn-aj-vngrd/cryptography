@@ -8,7 +8,7 @@
 int menu();
 char *vernam(char[], char[]);
 char *generateOTP(char[]);
-int validateOTP();
+int validateOTP(char[], char[]);
 int getTextFromFile(char[]);
 void saveTextToFile(char[]);
 
@@ -24,8 +24,23 @@ int main()
             int res = getTextFromFile(text);
             if (res)
             {
-                char *transformed_text = vernam(text, key_val);
-                printf("Encrypted Text: %s", transformed_text);
+                char otp[MAX_SIZE];
+                int res = validateOTP(otp, text);
+
+                if (res)
+                {
+                    printf("OTP: %s\n", otp);
+                    printf("Text: %s\n", text);
+
+                    char *transformed_text = vernam(text, otp);
+                    printf("Result: %s\n", transformed_text);
+
+                    saveTextToFile(transformed_text);
+                }
+                else
+                {
+                    printf("\nError: OTP is not valid.");
+                }
             }
             else
             {
@@ -38,7 +53,7 @@ int main()
             if (res)
             {
                 char *otp = generateOTP(text);
-                printf("OTP: %s", otp);
+                printf("OTP: %s\n", otp);
 
                 saveTextToFile(otp);
             }
@@ -102,49 +117,103 @@ int menu()
  *      decrypted_text: Hello
  */
 
-char *vernam(char plain_text[], char key[])
+char *vernam(char text[], char key[])
 {
-    char *transformed_text = (char *)calloc((strlen(plain_text)) + 1, sizeof(char));
+    char *transformed_text = (char *)calloc((strlen(text)) + 1, sizeof(char));
     int text_val, key_val, cipher_val;
 
     int i;
-    for (i = 0; i < strlen(plain_text); i++)
+    for (i = 0; i < strlen(text); i++)
     {
-        text_val = toupper(plain_text[i]) - 'A';
+        text_val = toupper(text[i]) - 'A';
         key_val = toupper(key[i]) - 'A';
 
         cipher_val = text_val ^ key_val;
-        transformed_text[i] = islower(plain_text[i]) ? cipher_val + 'a' : cipher_val + 'A';
+        transformed_text[i] = islower(text[i]) ? cipher_val + 'a' : cipher_val + 'A';
     }
 
     return transformed_text;
 }
 
+/*
+ * This function generates a random key or OTP of the same length as the text.
+ *
+ * @param text The text to be used to generate the OTP.
+ *
+ * @return The generated OTP.
+ *
+ * Example:
+ *  - text: Hello
+ *  - otp:  World
+ */
+
 char *generateOTP(char text[])
 {
-    char *key = (char *)calloc((strlen(text)) + 1, sizeof(char));
+    char *otp = (char *)calloc((strlen(text)) + 1, sizeof(char));
     int i;
     for (i = 0; i < strlen(text); i++)
     {
-        key[i] = rand() % 26 + 'A';
+        otp[i] = rand() % 26 + 'A';
     }
 
-    return key;
+    return otp;
 }
 
-int validateOTP()
+/*
+ * This function validates the OTP.
+ *
+ * @param otp The OTP to be validated.
+ * @param text The text to be used to validate the OTP.
+ *
+ * @return 1 if the OTP is valid, 0 otherwise.
+ *
+ * Example:
+ *  - text: Hello
+ *  - otp:  World
+ *  - otp is valid
+ */
+
+int validateOTP(char otp[], char text[])
 {
     char filename[MAX_SIZE];
+
     printf("Enter OTP filename: ");
-    scanf("%[^\n]", &otp);
+    scanf("%[^\n]", filename);
+    fflush(stdin);
+
+    FILE *file = fopen(strcat(filename, ".txt"), "r");
+    if (file == NULL)
+    {
+        printf("Failed to open OTP file.");
+        return 0;
+    }
+
+    fgets(otp, MAX_SIZE, file);
+    fclose(file);
+
+    if (strlen(otp) < strlen(text))
+    {
+        printf("OTP is too short.");
+        return 0;
+    }
+
+    return 1;
 }
+
+/*
+ * This function gets the text from a file.
+ *
+ * @param text The text to be read from the file.
+ *
+ * @return 1 if the text is read successfully, 0 otherwise.
+ */
 
 int getTextFromFile(char text[])
 {
     char filename[MAX_SIZE];
 
     printf("Enter filename to open: ");
-    scanf("%[^\n]", &filename);
+    scanf("%[^\n]", filename);
     fflush(stdin);
 
     FILE *file = fopen(strcat(filename, ".txt"), "r");
@@ -153,21 +222,24 @@ int getTextFromFile(char text[])
         return 0;
     }
 
-    while (fgets(text, MAX_SIZE, file) != NULL)
-    {
-    }
-
+    fgets(text, MAX_SIZE, file);
     fclose(file);
 
     return 1;
 }
+
+/*
+ * This function saves the text to a file.
+ *
+ * @param text The text to be saved to the file.
+ */
 
 void saveTextToFile(char text[])
 {
     char filename[MAX_SIZE];
 
     printf("Enter filename to save: ");
-    scanf("%[^\n]", &filename);
+    scanf("%[^\n]", filename);
     fflush(stdin);
 
     FILE *file = fopen(strcat(filename, ".txt"), "w");
