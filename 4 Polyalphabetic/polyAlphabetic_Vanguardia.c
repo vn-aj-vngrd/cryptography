@@ -113,7 +113,7 @@ char *generateKey(char text[])
     // Get key from user input
     char key_val[MAX_SIZE];
     printf("Input key: ");
-    scanf("%[^\n]", &key_val);
+    scanf("%[^\n]", key_val);
     fflush(stdin);
 
     // Create an allocated space for the new_key text to be returned.
@@ -225,7 +225,7 @@ int getTextFromFile(char text[])
     char filename[MAX_SIZE];
 
     printf("Enter filename to open: ");
-    scanf("%[^\n]", &filename);
+    scanf("%[^\n]", filename);
     fflush(stdin);
 
     FILE *file = fopen(strcat(filename, ".txt"), "r");
@@ -248,7 +248,7 @@ void saveTextToFile(char text[])
     char filename[MAX_SIZE];
 
     printf("Enter filename to save: ");
-    scanf("%[^\n]", &filename);
+    scanf("%[^\n]", filename);
     fflush(stdin);
 
     FILE *file = fopen(strcat(filename, ".txt"), "w");

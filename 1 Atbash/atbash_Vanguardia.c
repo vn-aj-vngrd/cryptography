@@ -15,7 +15,7 @@ int main()
     do
     {
         char text[MAX_SIZE];
-        
+
         int choice = menu();
         if (choice == 1)
         {
@@ -109,7 +109,7 @@ int getTextFromFile(char text[])
     char filename[MAX_SIZE];
 
     printf("Enter filename to open: ");
-    scanf("%[^\n]", &filename);
+    scanf("%[^\n]", filename);
     fflush(stdin);
 
     FILE *file = fopen(strcat(filename, ".txt"), "r");
@@ -132,7 +132,7 @@ void saveTextToFile(char text[])
     char filename[MAX_SIZE];
 
     printf("Enter filename to save: ");
-    scanf("%[^\n]", &filename);
+    scanf("%[^\n]", filename);
     fflush(stdin);
 
     FILE *file = fopen(strcat(filename, ".txt"), "w");
