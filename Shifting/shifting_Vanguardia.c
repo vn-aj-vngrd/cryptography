@@ -41,6 +41,7 @@ int main()
             scanf("%d", &shift_val);
             fflush(stdin);
 
+            printf("Text: %s\n", text);
             char *encrypted_text = shift(text, shift_val);
             printf("Encrypted Text: %s", encrypted_text);
 
@@ -68,6 +69,7 @@ int main()
             scanf("%d", &shift_val);
             fflush(stdin);
 
+            printf("Text: %s\n", text);
             char *decrypted_text = shift(text, MAX_ALPHA - (shift_val % MAX_ALPHA));
             printf("Decrypted Text: %s", decrypted_text);
 

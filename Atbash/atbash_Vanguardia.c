@@ -35,6 +35,7 @@ int main()
             {
             }
 
+            printf("Text: %s\n", text);
             char *transformed_text = abash(text);
             printf("Result: %s", transformed_text);
 
