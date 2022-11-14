@@ -6,78 +6,62 @@
 #define MAX_SIZE 255
 
 int menu();
-char *generateKey(char[]);
+char *generateKey();
 char *encrypt(char[], char[]);
 char *decrypt(char[], char[]);
+int getTextFromFile(char[]);
+void saveTextToFile(char[]);
 
 int main()
 {
-    char text[MAX_SIZE];
-    char filename[MAX_SIZE];
-    char key_val[MAX_SIZE];
-    int choice;
-
     do
     {
-        choice = menu();
+        char text[MAX_SIZE];
 
+        int choice = menu();
         if (choice == 1)
         {
-            printf("Enter filename: ");
-            scanf("%[^\n]", &filename);
-            fflush(stdin);
-
-            FILE *file = fopen(strcat(filename, ".txt"), "r");
-            if (file == NULL)
+            int res = getTextFromFile(text);
+            if (res)
             {
-                printf("Error: Failed to open the file.");
-                break;
-            }
+                char *key = generateKey();
+                printf("Generated Key: %s\n", key);
 
-            while (fgets(text, sizeof(text), file) != NULL)
+                printf("Text: %s\n", text);
+
+                char *encrypted_text = encrypt(text, key);
+                printf("Encrypted Text: %s\n", encrypted_text);
+
+                saveTextToFile(encrypted_text);
+            }
+            else
             {
+                printf("Error: Failed to read the file.");
             }
-
-            printf("Input key: ");
-            scanf("%[^\n]", &key_val);
-            fflush(stdin);
-
-            char *key = generateKey(key_val);
-            printf("Generated Key: %s\n", key);
-
-            char *encrypted_text = encrypt(text, key);
-            printf("Encrypted Text: %s", encrypted_text);
-
-            fclose(file);
         }
         else if (choice == 2)
         {
-            printf("Enter filename: ");
-            scanf("%[^\n]", &filename);
-            fflush(stdin);
-
-            FILE *file = fopen(strcat(filename, ".txt"), "r");
-            if (file == NULL)
+            int res = getTextFromFile(text);
+            if (res)
             {
-                printf("Error: Failed to open the file.");
-                break;
-            }
+                char *key = generateKey();
+                printf("Generated Key: %s\n", key);
 
-            while (fgets(text, sizeof(text), file) != NULL)
+                printf("Text: %s\n", text);
+
+                char *decrypted_text = decrypt(text, key);
+                printf("Decrypted Text: %s\n", decrypted_text);
+
+                saveTextToFile(decrypted_text);
+            }
+            else
             {
+                printf("Error: Failed to read the file.");
             }
-
-            printf("Input key: ");
-            scanf("%[^\n]", &key_val);
-            fflush(stdin);
-
-            char *key = generateKey(key_val);
-            printf("Generated Key: %s\n", key);
-
-            char *decrypted_text = decrypt(text, key);
-            printf("Decrypted Text: %s", decrypted_text);
-
-            fclose(file);
+        }
+        else if (choice == 3)
+        {
+            break;
         }
         else if (choice == 3)
         {
@@ -116,8 +100,6 @@ int menu()
 /*
  * Generate key by ordering the heirarchy of the letters.
  *
- * @param key_val
- *
  * @return key
  *
  * Example
@@ -130,8 +112,14 @@ int menu()
  * key = "21453"
  */
 
-char *generateKey(char key_val[])
+char *generateKey()
 {
+    // Get key from user input
+    char key_val[MAX_SIZE];
+    printf("Input key: ");
+    scanf("%[^\n]", &key_val);
+    fflush(stdin);
+
     char *key = (char *)calloc(strlen(key_val) + 1, sizeof(char));
     int i, j, k = 0;
 
@@ -313,4 +301,47 @@ char *decrypt(char cipher_text[], char key[])
     }
 
     return plain_text;
+}
+
+int getTextFromFile(char text[])
+{
+    char filename[MAX_SIZE];
+
+    printf("Enter filename to open: ");
+    scanf("%[^\n]", &filename);
+    fflush(stdin);
+
+    FILE *file = fopen(strcat(filename, ".txt"), "r");
+    if (!file)
+    {
+        return 0;
+    }
+
+    while (fgets(text, MAX_SIZE, file) != NULL)
+    {
+    }
+
+    fclose(file);
+
+    return 1;
+}
+
+void saveTextToFile(char text[])
+{
+    char filename[MAX_SIZE];
+
+    printf("Enter filename to save: ");
+    scanf("%[^\n]", &filename);
+    fflush(stdin);
+
+    FILE *file = fopen(strcat(filename, ".txt"), "w");
+    if (!file)
+    {
+        printf("Failed to save file.");
+    }
+
+    fprintf(file, "%s", text);
+    fclose(file);
+
+    printf("File saved successfully.");
 }

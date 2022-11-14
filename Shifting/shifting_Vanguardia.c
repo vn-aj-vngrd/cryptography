@@ -8,72 +8,58 @@
 
 int menu();
 char *shift(char[], int);
+int getTextFromFile(char[]);
+void saveTextToFile(char[]);
 
 int main()
 {
-    char text[MAX_SIZE];
-    char filename[MAX_SIZE];
-    int choice;
-    int shift_val;
-
     do
     {
-        choice = menu();
+        int shift_val;
+        char text[MAX_SIZE];
 
+        int choice = menu();
         if (choice == 1)
         {
-            printf("Enter filename: ");
-            scanf("%[^\n]", &filename);
-            fflush(stdin);
-
-            FILE *file = fopen(strcat(filename, ".txt"), "r");
-            if (file == NULL)
+            int res = getTextFromFile(text);
+            if (res)
             {
-                printf("Error: Failed to open the file.");
-                break;
-            }
+                printf("Enter shift value: ");
+                scanf("%d", &shift_val);
+                fflush(stdin);
 
-            while (fgets(text, sizeof(text), file) != NULL)
+                printf("Text: %s\n", text);
+
+                char *encrypted_text = shift(text, shift_val);
+                printf("Encrypted Text: %s\n", encrypted_text);
+
+                saveTextToFile(encrypted_text);
+            }
+            else
             {
+                printf("Error: Failed to read the file.");
             }
-
-            printf("Enter shift value: ");
-            scanf("%d", &shift_val);
-            fflush(stdin);
-
-            printf("Text: %s\n", text);
-            char *encrypted_text = shift(text, shift_val);
-            printf("Encrypted Text: %s", encrypted_text);
-
-            fclose(file);
         }
         else if (choice == 2)
         {
 
-            printf("Enter filename: ");
-            scanf("%[^\n]", &filename);
-            fflush(stdin);
-
-            FILE *file = fopen(strcat(filename, ".txt"), "r");
-            if (file == NULL)
+            int res = getTextFromFile(text);
+            if (res)
             {
-                printf("Error: Failed to open the file.");
-                break;
-            }
+                printf("Enter shift value: ");
+                scanf("%d", &shift_val);
+                fflush(stdin);
 
-            while (fgets(text, sizeof(text), file) != NULL)
+                printf("Text: %s\n", text);
+                char *decrypted_text = shift(text, MAX_ALPHA - (shift_val % MAX_ALPHA));
+                printf("Decrypted Text: %s\n", decrypted_text);
+
+                saveTextToFile(decrypted_text);
+            }
+            else
             {
+                printf("Error: Failed to read the file.");
             }
-
-            printf("Enter shift value: ");
-            scanf("%d", &shift_val);
-            fflush(stdin);
-
-            printf("Text: %s\n", text);
-            char *decrypted_text = shift(text, MAX_ALPHA - (shift_val % MAX_ALPHA));
-            printf("Decrypted Text: %s", decrypted_text);
-
-            fclose(file);
         }
         else if (choice == 3)
         {
@@ -152,4 +138,47 @@ char *shift(char plain_text[], int shift_val)
     }
 
     return transformed_text;
+}
+
+int getTextFromFile(char text[])
+{
+    char filename[MAX_SIZE];
+
+    printf("Enter filename to open: ");
+    scanf("%[^\n]", &filename);
+    fflush(stdin);
+
+    FILE *file = fopen(strcat(filename, ".txt"), "r");
+    if (!file)
+    {
+        return 0;
+    }
+
+    while (fgets(text, MAX_SIZE, file) != NULL)
+    {
+    }
+
+    fclose(file);
+
+    return 1;
+}
+
+void saveTextToFile(char text[])
+{
+    char filename[MAX_SIZE];
+
+    printf("Enter filename to save: ");
+    scanf("%[^\n]", &filename);
+    fflush(stdin);
+
+    FILE *file = fopen(strcat(filename, ".txt"), "w");
+    if (!file)
+    {
+        printf("Failed to save file.");
+    }
+
+    fprintf(file, "%s", text);
+    fclose(file);
+
+    printf("File saved successfully.");
 }

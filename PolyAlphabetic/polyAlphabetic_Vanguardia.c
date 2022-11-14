@@ -99,7 +99,6 @@ int menu()
  * until the length of the key is equal to the length of the plain_text
  *
  * @param plain_text
- * @param key_val
  *
  * @return key
  *
