@@ -63,7 +63,7 @@ int menu()
     int choice;
 
     printf("Atbash Cryptograph\n");
-    printf("--------------------\n");
+    printf("-------------------\n");
     printf("[1] Encrypt/Decrypt\n");
     printf("[2] Exit\n");
     printf("\nSelect: ");

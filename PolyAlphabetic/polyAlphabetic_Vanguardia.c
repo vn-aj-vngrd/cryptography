@@ -14,6 +14,7 @@ char *decrypt(char[], char[]);
 int main()
 {
     char text[MAX_SIZE];
+    char filename[MAX_SIZE];
     char key_val[MAX_SIZE];
     int choice;
 
@@ -23,9 +24,20 @@ int main()
 
         if (choice == 1)
         {
-            printf("Input text: ");
-            scanf("%[^\n]", &text);
+            printf("Enter filename: ");
+            scanf("%[^\n]", &filename);
             fflush(stdin);
+
+            FILE *file = fopen(strcat(filename, ".txt"), "r");
+            if (file == NULL)
+            {
+                printf("Error: Failed to open the file.");
+                break;
+            }
+
+            while (fgets(text, sizeof(text), file) != NULL)
+            {
+            }
 
             printf("Input key: ");
             scanf("%[^\n]", &key_val);
@@ -34,14 +46,28 @@ int main()
             char *new_key = generateKey(text, key_val);
             printf("Generated Key: %s\n", new_key);
 
+            printf("Text: %s\n", text);
             char *encrypted_text = encrypt(text, new_key);
             printf("Encrypted Text: %s", encrypted_text);
+
+            fclose(file);
         }
         else if (choice == 2)
         {
-            printf("Input text: ");
-            scanf("%[^\n]", &text);
+            printf("Enter filename: ");
+            scanf("%[^\n]", &filename);
             fflush(stdin);
+
+            FILE *file = fopen(strcat(filename, ".txt"), "r");
+            if (file == NULL)
+            {
+                printf("Error: Failed to open the file.");
+                break;
+            }
+
+            while (fgets(text, sizeof(text), file) != NULL)
+            {
+            }
 
             printf("Input key: ");
             scanf("%[^\n]", &key_val);
@@ -50,8 +76,11 @@ int main()
             char *new_key = generateKey(text, key_val);
             printf("Generated Key: %s\n", new_key);
 
+            printf("Text: %s\n", text);
             char *decrypted_text = decrypt(text, new_key);
             printf("Decrypted Text: %s", decrypted_text);
+
+            fclose(file);
         }
         else if (choice == 3)
         {
@@ -74,6 +103,8 @@ int menu()
 {
     int choice;
 
+    printf("Polyalphabetic Cryptograph\n");
+    printf("-------------------------\n");
     printf("[1] Encrypt\n");
     printf("[2] Decrypt\n");
     printf("[3] Exit\n");
@@ -95,9 +126,9 @@ int menu()
  * @return key
  *
  * Example:
- * text = "HELLOWORLD"
+ * text = "HELLO WORLD!"
  * key_val = "EARTH"
- * key = "EARTHEARTH"
+ * key = "EARTH EARTHE"
  */
 
 char *generateKey(char plain_text[], char key_val[])
@@ -129,10 +160,10 @@ char *generateKey(char plain_text[], char key_val[])
  * @return encrypted_text
  *
  * Example:
- * plain_text = "HELLOWORLD"
- * key_val = "EARTH"
- * generated_key = "EARTHEARTH"
- * encrypted_text = "LECEVAOIEK"
+ *  plain_text = "HELLO WORLD!"
+ *  key_val = "EARTH"
+ *  generated_key = "EARTH EARTHE"
+ *  encrypted_text = "LECEV AOIEK!"
  */
 
 char *encrypt(char plain_text[], char key[])
@@ -171,10 +202,10 @@ char *encrypt(char plain_text[], char key[])
  * @return decrypted_text
  *
  * Example:
- * encrypted_text = "LECEVAOIEK"
- * key_val = "EARTH"
- * generated_key = "EARTHEARTH"
- * decrypted_text = "HELLOWORLD"
+ *  encrypted_text = "LECEV AOIEK!"
+ *  key_val = "EARTH"
+ *  generated_key = "EARTH EARTHE"
+ *  decrypted_text = "HELLO WORLD!"
  */
 
 char *decrypt(char cipher_text[], char key[])
