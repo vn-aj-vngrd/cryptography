@@ -59,9 +59,9 @@ int menu()
 {
     int choice;
 
-    printf("Vernam Cryptograph\n");
+    printf("Vernam OTP\n");
     printf("------------------\n");
-    printf("[1] Start\n");
+    printf("[1] Generate OTP\n");
     printf("[2] Exit\n");
     printf("\nSelect: ");
 
@@ -71,41 +71,10 @@ int menu()
     return choice;
 }
 
-/*
- * This function encrypts and decrypts the text using the Vernam Cipher.
- * The key must be of the same length or greater as the text.
- *
- * @param text The text to be encrypted or decrypted.
- * @param key The key to be used for encryption or decryption.
- *
- * @return The encrypted or decrypted text.
- *
- * Example:
- *  - Encrypt
- *      text: Hello
- *      key:  World
- *      encrypted_text: Rk{an
- *
- *  - Decrypt
- *      text: Rk{an
- *      key:  World
- *      decrypted_text: Hello
- */
-
-char *vernam(char plain_text[], char key[])
+char *generateOTP(char text[], char key[])
 {
-    char *transformed_text = (char *)calloc((strlen(plain_text)) + 1, sizeof(char));
-    int text_val, key_val, cipher_val;
-
     int i;
-    for (i = 0; i < strlen(plain_text); i++)
-    {
-        text_val = toupper(plain_text[i]) - 'A';
-        key_val = toupper(key[i]) - 'A';
+    char *otp = (char *)calloc((strlen(plain_text)) + 1, sizeof(char));
 
-        cipher_val = text_val ^ key_val;
-        transformed_text[i] = islower(plain_text[i]) ? cipher_val + 'a' : cipher_val + 'A';
-    }
-
-    return transformed_text;
+    return otp;
 }

@@ -7,39 +7,31 @@
 
 int menu();
 char *abash(char[]);
+int getTextFromFile(char[]);
+void saveTextToFile(char[]);
 
 int main()
 {
-    char text[MAX_SIZE];
-    char filename[MAX_SIZE];
-    int choice;
-
     do
     {
-        choice = menu();
-
+        char text[MAX_SIZE];
+        
+        int choice = menu();
         if (choice == 1)
         {
-            printf("Enter filename: ");
-            scanf("%[^\n]", &filename);
-            fflush(stdin);
-
-            FILE *file = fopen(strcat(filename, ".txt"), "r");
-            if (file == NULL)
+            int res = getTextFromFile(text);
+            if (res)
             {
-                printf("Error: Failed to open the file.");
-                break;
-            }
+                printf("Text: %s\n", text);
+                char *transformed_text = abash(text);
+                printf("Result: %s\n", transformed_text);
 
-            while (fgets(text, sizeof(text), file) != NULL)
+                saveTextToFile(transformed_text);
+            }
+            else
             {
+                printf("Error: Failed to read the file.");
             }
-
-            printf("Text: %s\n", text);
-            char *transformed_text = abash(text);
-            printf("Result: %s", transformed_text);
-
-            fclose(file);
         }
         else if (choice == 2)
         {
@@ -84,30 +76,73 @@ int menu()
  * Input: Hello World!
  * Output: Svool Dliow!
  */
-char *abash(char plain_text[])
+char *abash(char text[])
 {
     // Create an allocated memory for the transformed text.
-    char *transformed_text = (char *)calloc(strlen(plain_text) + 1, sizeof(char));
+    char *transformed_text = (char *)calloc(strlen(text) + 1, sizeof(char));
     int i;
 
     // Loop through the plain text.
-    for (i = 0; i < strlen(plain_text); i++)
+    for (i = 0; i < strlen(text); i++)
     {
         // Transform the letter to its abashed form.
         // Example: a -> z, b -> y, c -> x, ..., z ->
-        if (isalpha(plain_text[i]))
+        if (isalpha(text[i]))
         {
             // If the letter is lowercase then return a lowercase letter
             // else return an uppercase letter
-            transformed_text[i] = islower(plain_text[i]) ? 'z' - (plain_text[i] - 'a')
-                                                         : 'Z' - (plain_text[i] - 'A');
+            transformed_text[i] = islower(text[i]) ? 'z' - (text[i] - 'a')
+                                                   : 'Z' - (text[i] - 'A');
         }
         else
         {
             // If the current character is not a letter, just copy it.
-            transformed_text[i] = plain_text[i];
+            transformed_text[i] = text[i];
         }
     }
 
     return transformed_text;
+}
+
+int getTextFromFile(char text[])
+{
+    char filename[MAX_SIZE];
+
+    printf("Enter filename to open: ");
+    scanf("%[^\n]", &filename);
+    fflush(stdin);
+
+    FILE *file = fopen(strcat(filename, ".txt"), "r");
+    if (!file)
+    {
+        return 0;
+    }
+
+    while (fgets(text, MAX_SIZE, file) != NULL)
+    {
+    }
+
+    fclose(file);
+
+    return 1;
+}
+
+void saveTextToFile(char text[])
+{
+    char filename[MAX_SIZE];
+
+    printf("Enter filename to save: ");
+    scanf("%[^\n]", &filename);
+    fflush(stdin);
+
+    FILE *file = fopen(strcat(filename, ".txt"), "w");
+    if (!file)
+    {
+        printf("Failed to save file.");
+    }
+
+    fprintf(file, "%s", text);
+    fclose(file);
+
+    printf("File saved successfully.");
 }

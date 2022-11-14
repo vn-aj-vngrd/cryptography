@@ -7,80 +7,58 @@
 #define MAX_SIZE 255
 
 int menu();
-char *generateKey(char[], char[]);
+char *generateKey(char[]);
 char *encrypt(char[], char[]);
 char *decrypt(char[], char[]);
+int getTextFromFile(char[]);
+void saveTextToFile(char[]);
 
 int main()
 {
-    char text[MAX_SIZE];
-    char filename[MAX_SIZE];
-    char key_val[MAX_SIZE];
-    int choice;
-
     do
     {
-        choice = menu();
+        char text[MAX_SIZE];
 
+        int choice = menu();
         if (choice == 1)
         {
-            printf("Enter filename: ");
-            scanf("%[^\n]", &filename);
-            fflush(stdin);
-
-            FILE *file = fopen(strcat(filename, ".txt"), "r");
-            if (file == NULL)
+            int res = getTextFromFile(text);
+            if (res)
             {
-                printf("Error: Failed to open the file.");
-                break;
-            }
+                char *key = generateKey(text);
+                printf("Generated Key: %s\n", key);
 
-            while (fgets(text, sizeof(text), file) != NULL)
+                printf("Text: %s\n", text);
+
+                char *encrypted_text = encrypt(text, key);
+                printf("Encrypted Text: %s\n", encrypted_text);
+
+                saveTextToFile(encrypted_text);
+            }
+            else
             {
+                printf("Error: Failed to read the file.");
             }
-
-            printf("Input key: ");
-            scanf("%[^\n]", &key_val);
-            fflush(stdin);
-
-            char *new_key = generateKey(text, key_val);
-            printf("Generated Key: %s\n", new_key);
-
-            printf("Text: %s\n", text);
-            char *encrypted_text = encrypt(text, new_key);
-            printf("Encrypted Text: %s", encrypted_text);
-
-            fclose(file);
         }
         else if (choice == 2)
         {
-            printf("Enter filename: ");
-            scanf("%[^\n]", &filename);
-            fflush(stdin);
-
-            FILE *file = fopen(strcat(filename, ".txt"), "r");
-            if (file == NULL)
+            int res = getTextFromFile(text);
+            if (res)
             {
-                printf("Error: Failed to open the file.");
-                break;
-            }
+                char *key = generateKey(text);
+                printf("Generated Key: %s\n", key);
 
-            while (fgets(text, sizeof(text), file) != NULL)
+                printf("Text: %s\n", text);
+
+                char *decrypted_text = decrypt(text, key);
+                printf("Decrypted Text: %s\n", decrypted_text);
+
+                saveTextToFile(decrypted_text);
+            }
+            else
             {
+                printf("Error: Failed to read the file.");
             }
-
-            printf("Input key: ");
-            scanf("%[^\n]", &key_val);
-            fflush(stdin);
-
-            char *new_key = generateKey(text, key_val);
-            printf("Generated Key: %s\n", new_key);
-
-            printf("Text: %s\n", text);
-            char *decrypted_text = decrypt(text, new_key);
-            printf("Decrypted Text: %s", decrypted_text);
-
-            fclose(file);
         }
         else if (choice == 3)
         {
@@ -131,22 +109,28 @@ int menu()
  * key = "EARTH EARTHE"
  */
 
-char *generateKey(char plain_text[], char key_val[])
+char *generateKey(char text[])
 {
+    // Get key from user input
+    char key_val[MAX_SIZE];
+    printf("Input key: ");
+    scanf("%[^\n]", &key_val);
+    fflush(stdin);
+
     // Create an allocated space for the new_key text to be returned.
-    char *new_key = (char *)calloc((strlen(plain_text) + 1), sizeof(char));
+    char *new_key = (char *)calloc((strlen(text) + 1), sizeof(char));
 
     int i, j;
-    // Loop/Traverse through the plain_text and key_val.
-    for (i = 0, j = 0; i < strlen(plain_text); i++)
+    // Loop/Traverse through the text and key_val.
+    for (i = 0, j = 0; i < strlen(text); i++)
     {
         // If the key_val is traversed completely, go back to the first index
         if (j == strlen(key_val))
             j = 0;
 
-        // If the plain_text is a space, add a space to the new_key.
+        // If the text is a space, add a space to the new_key.
         //  Else, copy the uppercased character of key_val
-        new_key[i] = plain_text[i] == ' ' ? ' ' : toupper(key_val[j++]);
+        new_key[i] = text[i] == ' ' ? ' ' : toupper(key_val[j++]);
     }
 
     return new_key;
@@ -235,4 +219,47 @@ char *decrypt(char cipher_text[], char key[])
     }
 
     return decrypted_text;
+}
+
+int getTextFromFile(char text[])
+{
+    char filename[MAX_SIZE];
+
+    printf("Enter filename to open: ");
+    scanf("%[^\n]", &filename);
+    fflush(stdin);
+
+    FILE *file = fopen(strcat(filename, ".txt"), "r");
+    if (!file)
+    {
+        return 0;
+    }
+
+    while (fgets(text, MAX_SIZE, file) != NULL)
+    {
+    }
+
+    fclose(file);
+
+    return 1;
+}
+
+void saveTextToFile(char text[])
+{
+    char filename[MAX_SIZE];
+
+    printf("Enter filename to save: ");
+    scanf("%[^\n]", &filename);
+    fflush(stdin);
+
+    FILE *file = fopen(strcat(filename, ".txt"), "w");
+    if (!file)
+    {
+        printf("Failed to save file.");
+    }
+
+    fprintf(file, "%s", text);
+    fclose(file);
+
+    printf("File saved successfully.");
 }
