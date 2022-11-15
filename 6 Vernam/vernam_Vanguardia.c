@@ -86,7 +86,7 @@ int menu()
     printf("Vernam Cryptograph\n");
     printf("-------------------\n");
     printf("[1] Encrypt/Decrypt\n");
-    printf("[2] Generate Key\n");
+    printf("[2] Generate OTP\n");
     printf("[3] Exit\n");
     printf("\nSelect: ");
 
