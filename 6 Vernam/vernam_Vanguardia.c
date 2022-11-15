@@ -128,6 +128,7 @@ char *vernam(char text[], char key[])
         text_val = toupper(text[i]) - 'A';
         key_val = toupper(key[i]) - 'A';
 
+        // Forumla: text_char XOR key_char
         cipher_val = text_val ^ key_val;
         transformed_text[i] = islower(text[i]) ? cipher_val + 'a' : cipher_val + 'A';
     }
