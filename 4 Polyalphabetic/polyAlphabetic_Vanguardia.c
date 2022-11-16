@@ -165,7 +165,8 @@ char *encrypt(char plain_text[], char key[])
             int cipher_val = (toupper(plain_text[i]) + key[i]) % MAX_ALPHA;
 
             // Check if the letter is lowercase then return a lowercase letter else return an uppercase letter
-            encrypted_text[i] = islower(plain_text[i]) ? (cipher_val + 'a') : (cipher_val + 'A');
+            encrypted_text[i] = islower(plain_text[i]) ? (cipher_val + 'a')
+                                                       : (cipher_val + 'A');
         }
         else
         {
