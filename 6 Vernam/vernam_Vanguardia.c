@@ -151,6 +151,7 @@ char *vernam(char text[], char key[])
 char *generateOTP(char text[])
 {
     char *otp = (char *)calloc((strlen(text)) + 1, sizeof(char));
+    
     int i;
     for (i = 0; i < strlen(text); i++)
     {
