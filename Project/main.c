@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "functions.c"
+#include "functions/functions.c"
 
 int main()
 {
@@ -24,7 +24,7 @@ int main()
       }
       else
       {
-        printf("Error: File not found!\n");
+        printf("Error: File not found!");
       }
     }
 
@@ -46,12 +46,12 @@ int main()
         }
         else
         {
-          printf("Error: File not found!\n");
+          printf("Error: File not found!");
         }
       }
       else
       {
-        printf("Error: File not found!\n");
+        printf("Error: File not found!");
       }
     }
 

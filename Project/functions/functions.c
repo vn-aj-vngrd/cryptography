@@ -6,9 +6,9 @@
 
 #include "functions.h"
 
-/**********************************
+/*****************************************
  * Main Functions
- **********************************/
+ ****************************************/
 
 char *encrypt(char text[])
 {
@@ -17,20 +17,32 @@ char *encrypt(char text[])
     char *cipher_text = (char *)calloc(size + 1, sizeof(char));
     strcpy(cipher_text, text);
 
-    char *key = (char *)calloc(size * 2 + 1, sizeof(char));
+    char *key = (char *)calloc(size * 3 + 1, sizeof(char));
 
-    // Atbash
-    atbash(cipher_text);
-
-    // Shifting
     char *shift_key = generateKey(size);
-    shift(cipher_text, shift_key);
     strcpy(key, shift_key);
 
-    // Vernam
+    char *vigenere_key = generateKey(size);
+    strncpy(key + size, vigenere_key, size);
+
     char *otp = generateKey(size);
-    vernam(cipher_text, otp);
-    strcat(key, otp);
+    strncpy(key + size * 2, otp, size);
+
+    int i;
+    for (i = 0; i < MAX_ROUNDS; i++)
+    {
+        // Atbash
+        atbash(cipher_text);
+
+        // Shifting
+        shift(cipher_text, shift_key);
+
+        // Vigenere
+        vigenere(cipher_text, vigenere_key, 1);
+
+        // Vernam
+        vernam(cipher_text, otp);
+    }
 
     printf("\nKey: %s\n", key);
     saveTextToFile(key, "key");
@@ -45,26 +57,38 @@ char *decrypt(char text[], char key[])
     char *plain_text = (char *)calloc(size + 1, sizeof(char));
     strcpy(plain_text, text);
 
-    // Vernam
     char *otp = (char *)calloc(size + 1, sizeof(char));
-    strncpy(otp, key + size, size);
-    vernam(plain_text, otp);
+    strncpy(otp, key + size * 2, size);
 
-    // Shifting
+    char *vigenere_key = (char *)calloc(size + 1, sizeof(char));
+    strncpy(vigenere_key, key + size, size);
+
     char *shift_key = (char *)calloc(size + 1, sizeof(char));
     strncpy(shift_key, key, size);
     char *new_shift_key = decryptShiftKey(shift_key);
-    shift(plain_text, new_shift_key);
 
-    // Atbash
-    atbash(plain_text);
+    int i;
+    for (i = 0; i < MAX_ROUNDS; i++)
+    {
+        // Vernam
+        vernam(plain_text, otp);
+
+        // Vigenere
+        vigenere(plain_text, vigenere_key, 2);
+
+        // Shifting
+        shift(plain_text, new_shift_key);
+
+        // Atbash
+        atbash(plain_text);
+    }
 
     return plain_text;
 }
 
-/**********************************
- * Encryption Utility Functions
- **********************************/
+/*****************************************
+ * Encryption/Decryption Utility Functions
+ ****************************************/
 
 void atbash(char text[])
 {
@@ -76,10 +100,6 @@ void atbash(char text[])
         {
             text[i] =
                 islower(text[i]) ? 'z' - (text[i] - 'a') : 'Z' - (text[i] - 'A');
-        }
-        else
-        {
-            text[i] = text[i];
         }
     }
 }
@@ -96,9 +116,28 @@ void shift(char text[], char shift_key[])
                           ? 'a' + (text[i] - 'a' + shift_key[i]) % 26
                           : 'A' + (text[i] - 'A' + shift_key[i]) % 26;
         }
-        else
+    }
+}
+
+void vigenere(char text[], char key[], int type)
+{
+    int vigenere_val;
+
+    int i;
+    for (i = 0; i < strlen(text); i++)
+    {
+        if (isalpha(text[i]))
         {
-            text[i] = text[i];
+            if (type == 1)
+            {
+                vigenere_val = (toupper(text[i]) + key[i]) % 26;
+            }
+            else
+            {
+                vigenere_val = (toupper(text[i]) - key[i] + 26) % 26;
+            }
+
+            text[i] = islower(text[i]) ? (vigenere_val + 'a') : (vigenere_val + 'A');
         }
     }
 }
@@ -118,9 +157,9 @@ void vernam(char text[], char otp[])
     }
 }
 
-/**********************************
+/*****************************************
  * Key Generators
- **********************************/
+ ****************************************/
 
 char *generateKey(int size)
 {
@@ -148,14 +187,15 @@ char *decryptShiftKey(char key[])
     return shift_key;
 }
 
-/**********************************
+/*****************************************
  * Common Utility Functions
- **********************************/
+ ****************************************/
 
 int menu()
 {
     int choice;
 
+    printf("-----------------\n");
     printf("Van's Cryptograph\n");
     printf("-----------------\n");
     printf("[1] Encrypt\n");
