@@ -4,6 +4,7 @@
     "*.rmd": "markdown",
     "string.h": "c",
     "stdlib.h": "c",
-    "ctype.h": "c"
+    "ctype.h": "c",
+    "functions.h": "c"
   }
 }

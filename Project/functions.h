@@ -3,15 +3,18 @@
 
 #define MAX_SIZE 256
 
-int getRandomShift();
-char *generateOTP(char text[]);
+char *encrypt(char text[]);
+char *decrypt(char text[], char key[]);
 
-char *reverse(char text[]);
-char *shift(char text[], char key[]);
-char *vernam(char text[], char key[]);
+char *generateKey(int size);
+char *decryptShiftKey(char key[]);
+
+void atbash(char text[]);
+void shift(char text[], char shift_key[]);
+void vernam(char text[], char otp[]);
 
 int menu();
-int getTextFromFile(char text[]);
-void saveTextToFile(char text[]);
+int getTextFromFile(char text[], char type[]);
+void saveTextToFile(char text[], char type[]);
 
 #endif
