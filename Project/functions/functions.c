@@ -18,7 +18,7 @@ char *encrypt(char text[])
     char *cipher_text = (char *)calloc(size + 1, sizeof(char));
     strcpy(cipher_text, text);
 
-    char *key = (char *)calloc((size * 3) + (size / 2) + 1, sizeof(char));
+    char *key = (char *)calloc((size * 4) + 1, sizeof(char));
 
     char *shift_key = generateKey(size);
     strcpy(key, shift_key);
@@ -45,6 +45,9 @@ char *encrypt(char text[])
         vernam(cipher_text, otp);
     }
 
+    // Reverse
+    reverseText(cipher_text);
+
     printf("\nKey: %s\n", key);
     saveTextToFile(key, "key");
 
@@ -68,9 +71,13 @@ char *decrypt(char text[], char key[])
     strncpy(shift_key, key, size);
     char *new_shift_key = decryptShiftKey(shift_key);
 
+    // Reverse
+    reverseText(plain_text);
+
     int i;
     for (i = 0; i < MAX_ROUNDS; i++)
     {
+
         // Vernam
         vernam(plain_text, otp);
 
@@ -120,7 +127,7 @@ void shift(char text[], char shift_key[])
     }
 }
 
-void vigenere(char text[], char key[], int type)
+void vigenere(char text[], char vigenere_key[], int type)
 {
     int vigenere_val;
 
@@ -131,11 +138,11 @@ void vigenere(char text[], char key[], int type)
         {
             if (type == 1)
             {
-                vigenere_val = (toupper(text[i]) + key[i]) % 26;
+                vigenere_val = (toupper(text[i]) + vigenere_key[i]) % 26;
             }
             else
             {
-                vigenere_val = (toupper(text[i]) - key[i] + 26) % 26;
+                vigenere_val = (toupper(text[i]) - vigenere_key[i] + 26) % 26;
             }
 
             text[i] = islower(text[i]) ? (vigenere_val + 'a') : (vigenere_val + 'A');
@@ -155,6 +162,19 @@ void vernam(char text[], char otp[])
         int cipher_val = text_val ^ key_val;
 
         text[i] = islower(text[i]) ? cipher_val + 'a' : cipher_val + 'A';
+    }
+}
+
+void reverseText(char text[])
+{
+    int i, j;
+    char temp;
+
+    for (i = 0, j = strlen(text) - 1; i < j; i++, j--)
+    {
+        temp = text[i];
+        text[i] = text[j];
+        text[j] = temp;
     }
 }
 

@@ -9,8 +9,9 @@ char *decrypt(char text[], char key[]);
 
 void atbash(char text[]);
 void shift(char text[], char shift_key[]);
-void vigenere(char text[], char key[], int type);
+void vigenere(char text[], char vigenere_key[], int type);
 void vernam(char text[], char otp[]);
+void reverseText(char text[]);
 
 char *generateKey(int size);
 char *decryptShiftKey(char key[]);
