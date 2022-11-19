@@ -7,13 +7,13 @@
 char *encrypt(char text[]);
 char *decrypt(char text[], char key[]);
 
-char *generateKey(int size);
-char *decryptShiftKey(char key[]);
-
 void atbash(char text[]);
 void shift(char text[], char shift_key[]);
 void vigenere(char text[], char key[], int type);
 void vernam(char text[], char otp[]);
+
+char *generateKey(int size);
+char *decryptShiftKey(char key[]);
 
 int menu();
 int getTextFromFile(char text[], char type[]);

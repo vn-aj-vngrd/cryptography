@@ -12,12 +12,13 @@
 
 char *encrypt(char text[])
 {
+    srand(time(NULL));
     int size = strlen(text);
 
     char *cipher_text = (char *)calloc(size + 1, sizeof(char));
     strcpy(cipher_text, text);
 
-    char *key = (char *)calloc(size * 3 + 1, sizeof(char));
+    char *key = (char *)calloc((size * 3) + (size / 2) + 1, sizeof(char));
 
     char *shift_key = generateKey(size);
     strcpy(key, shift_key);
