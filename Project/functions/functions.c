@@ -18,7 +18,7 @@ char *encrypt(char text[])
     char *cipher_text = (char *)calloc(size + 1, sizeof(char));
     strcpy(cipher_text, text);
 
-    char *key = (char *)calloc((size * 4) + 1, sizeof(char));
+    char *key = (char *)calloc((size * 3) + (size / 2) + 1, sizeof(char));
 
     char *shift_key = generateKey(size);
     strcpy(key, shift_key);
@@ -29,8 +29,11 @@ char *encrypt(char text[])
     char *otp = generateKey(size);
     strncpy(key + size * 2, otp, size);
 
+    char *transposition_key = generateTranspositionKey(size / 2);
+    strncpy(key + size * 3, transposition_key, size / 2);
+
     int i;
-    for (i = 0; i < MAX_ROUNDS; i++)
+    for (i = 0; i < MAX_ROUND; i++)
     {
         // Atbash
         atbash(cipher_text);
@@ -45,8 +48,11 @@ char *encrypt(char text[])
         vernam(cipher_text, otp);
     }
 
-    // Reverse
-    reverseText(cipher_text);
+    // Transposition
+    transposition(cipher_text, transposition_key, 1);
+
+    // Reverse Key
+    reverseKey(key);
 
     printf("\nKey: %s\n", key);
     saveTextToFile(key, "key");
@@ -61,6 +67,12 @@ char *decrypt(char text[], char key[])
     char *plain_text = (char *)calloc(size + 1, sizeof(char));
     strcpy(plain_text, text);
 
+    // Reverse Key
+    reverseKey(key);
+
+    char *transposition_key = (char *)calloc(size / 2 + 1, sizeof(char));
+    strncpy(transposition_key, key + size * 3, size / 2);
+
     char *otp = (char *)calloc(size + 1, sizeof(char));
     strncpy(otp, key + size * 2, size);
 
@@ -69,15 +81,14 @@ char *decrypt(char text[], char key[])
 
     char *shift_key = (char *)calloc(size + 1, sizeof(char));
     strncpy(shift_key, key, size);
-    char *new_shift_key = decryptShiftKey(shift_key);
+    char *new_shift_key = inverseShiftKey(shift_key);
 
-    // Reverse
-    reverseText(plain_text);
+    // Transposition
+    transposition(plain_text, transposition_key, 2);
 
     int i;
-    for (i = 0; i < MAX_ROUNDS; i++)
+    for (i = 0; i < MAX_ROUND; i++)
     {
-
         // Vernam
         vernam(plain_text, otp);
 
@@ -165,16 +176,120 @@ void vernam(char text[], char otp[])
     }
 }
 
-void reverseText(char text[])
+void transposition(char text[], char transposition_key[], int type)
+{
+    if (type == 1)
+    {
+        int row = strlen(text) / strlen(transposition_key);
+        // If the length of the plain text is not divisible by the length of the transposition_key, add 1 to the row.
+        if (strlen(text) % strlen(transposition_key) != 0)
+            row++;
+
+        int col = strlen(transposition_key);
+
+        // Create an allocated memory for the cipher text.
+        char *cipher_text = (char *)calloc((row * col) + 1, sizeof(char));
+
+        // Create a 2D array to store the plain text.
+        char matrix[row][col];
+        int i, j, k;
+
+        // Initialize the matrix with the plain text.
+        k = 0;
+        for (i = 0; i < row; i++)
+        {
+            for (j = 0; j < col; j++)
+            {
+                if (k < strlen(text))
+                {
+                    matrix[i][j] = text[k] == ' ' ? '_' : text[k];
+                    k++;
+                }
+                else
+                {
+                    matrix[i][j] = '_';
+                }
+            }
+        }
+
+        // Encrypt the plain text.
+        k = 0;
+        for (i = 0; i < col; i++)
+        {
+            // Get the index position of the transposition_key that corresponds to the iterator's value
+            int key_idx;
+            for (j = 0; strlen(transposition_key); j++)
+            {
+                if (transposition_key[j] == i + '1')
+                {
+                    key_idx = j;
+                    break;
+                }
+            }
+
+            // Get the row and column of the matrix that corresponds to the iterator's value and key index.
+            for (j = 0; j < row; j++)
+            {
+                text[k] = matrix[j][key_idx];
+                k++;
+            }
+        }
+    }
+    else
+    {
+        int row = strlen(text) / strlen(transposition_key);
+        int col = strlen(transposition_key);
+
+        // Create a 2D array to store the cipher text.
+        char matrix[row][col];
+        int i, j, k, l;
+
+        // Initialize the matrix with the cipher text.
+        k = 0;
+        for (i = 0; i < col; i++)
+        {
+            // Get the index position of the transposition_key that corresponds to the iterator's value
+            int key_idx;
+            for (j = 0; strlen(transposition_key); j++)
+            {
+                if (transposition_key[j] == i + '1')
+                {
+                    key_idx = j;
+                    break;
+                }
+            }
+
+            // Get the row and column of the matrix that corresponds to the iterator's value and transposition_key index.
+            for (j = 0; j < row; j++)
+            {
+                matrix[j][key_idx] = text[k];
+                k++;
+            }
+        }
+
+        // Decrypt the cipher text.
+        k = 0;
+        for (i = 0; i < row; i++)
+        {
+            for (j = 0; j < col; j++)
+            {
+                text[k] = matrix[i][j] == '_' ? ' ' : matrix[i][j];
+                k++;
+            }
+        }
+    }
+}
+
+void reverseKey(char key[])
 {
     int i, j;
     char temp;
 
-    for (i = 0, j = strlen(text) - 1; i < j; i++, j--)
+    for (i = 0, j = strlen(key) - 1; i < j; i++, j--)
     {
-        temp = text[i];
-        text[i] = text[j];
-        text[j] = temp;
+        temp = key[i];
+        key[i] = key[j];
+        key[j] = temp;
     }
 }
 
@@ -195,7 +310,7 @@ char *generateKey(int size)
     return shift_key;
 }
 
-char *decryptShiftKey(char key[])
+char *inverseShiftKey(char key[])
 {
     char *shift_key = (char *)calloc(strlen(key) + 1, sizeof(char));
     int i;
@@ -206,6 +321,27 @@ char *decryptShiftKey(char key[])
     }
 
     return shift_key;
+}
+
+char *generateTranspositionKey(int size)
+{
+    char *key = (char *)calloc(size + 1, sizeof(char));
+    int i;
+
+    for (i = 0; i < size; i++)
+    {
+        key[i] = i + '1';
+    }
+
+    for (i = 0; i < size; i++)
+    {
+        int rand_idx = rand() % size;
+        char temp = key[i];
+        key[i] = key[rand_idx];
+        key[rand_idx] = temp;
+    }
+
+    return key;
 }
 
 /*****************************************

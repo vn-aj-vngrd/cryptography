@@ -1,8 +1,8 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
-#define MAX_SIZE 256
-#define MAX_ROUNDS 10
+#define MAX_SIZE 9999
+#define MAX_ROUND 10
 
 char *encrypt(char text[]);
 char *decrypt(char text[], char key[]);
@@ -11,10 +11,12 @@ void atbash(char text[]);
 void shift(char text[], char shift_key[]);
 void vigenere(char text[], char vigenere_key[], int type);
 void vernam(char text[], char otp[]);
-void reverseText(char text[]);
+void transposition(char text[], char transposition_key[], int type);
+void reverseKey(char key[]);
 
 char *generateKey(int size);
-char *decryptShiftKey(char key[]);
+char *inverseShiftKey(char key[]);
+char *generateTranspositionKey(int size);
 
 int menu();
 int getTextFromFile(char text[], char type[]);
