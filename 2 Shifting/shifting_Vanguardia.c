@@ -8,8 +8,8 @@
 
 int menu();
 char *shift(char[], int);
-int getTextFromFile(char[]);
-void saveTextToFile(char[]);
+int getTextFromFile(char[], char[]);
+void saveTextToFile(char[], char[]);
 
 int main()
 {
@@ -21,7 +21,7 @@ int main()
         int choice = menu();
         if (choice == 1)
         {
-            int res = getTextFromFile(text);
+            int res = getTextFromFile(text, "plaintext");
             if (res)
             {
                 printf("Enter shift value: ");
@@ -31,9 +31,9 @@ int main()
                 printf("Text: %s\n", text);
 
                 char *encrypted_text = shift(text, shift_val);
-                printf("Encrypted Text: %s\n", encrypted_text);
+                printf("\nCiphertext: %s\n", encrypted_text);
 
-                saveTextToFile(encrypted_text);
+                saveTextToFile(encrypted_text, "ciphertext");
             }
             else
             {
@@ -43,7 +43,7 @@ int main()
         else if (choice == 2)
         {
 
-            int res = getTextFromFile(text);
+            int res = getTextFromFile(text, "ciphertext");
             if (res)
             {
                 printf("Enter shift value: ");
@@ -52,9 +52,9 @@ int main()
 
                 printf("Text: %s\n", text);
                 char *decrypted_text = shift(text, MAX_ALPHA - (shift_val % MAX_ALPHA));
-                printf("Decrypted Text: %s\n", decrypted_text);
+                printf("\nPlaintext: %s\n", decrypted_text);
 
-                saveTextToFile(decrypted_text);
+                saveTextToFile(decrypted_text, "plaintext");
             }
             else
             {
@@ -148,11 +148,11 @@ char *shift(char plain_text[], int shift_val)
  * @return 1 if the text is read successfully, 0 otherwise.
  */
 
-int getTextFromFile(char text[])
+int getTextFromFile(char text[], char type[])
 {
     char filename[MAX_SIZE];
 
-    printf("Enter filename to open: ");
+    printf("Enter filename to open %s: ", type);
     scanf("%[^\n]", filename);
     fflush(stdin);
 
@@ -174,11 +174,11 @@ int getTextFromFile(char text[])
  * @param text The text to be saved to the file.
  */
 
-void saveTextToFile(char text[])
+void saveTextToFile(char text[], char type[])
 {
     char filename[MAX_SIZE];
 
-    printf("Enter filename to save: ");
+    printf("Enter filename to save %s: ", type);
     scanf("%[^\n]", filename);
     fflush(stdin);
 

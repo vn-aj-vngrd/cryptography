@@ -6,9 +6,9 @@
 #define MAX_SIZE 255
 
 int menu();
-char *abash(char[]);
-int getTextFromFile(char[]);
-void saveTextToFile(char[]);
+char *atbash(char[]);
+int getTextFromFile(char[], char[]);
+void saveTextToFile(char[], char[]);
 
 int main()
 {
@@ -19,14 +19,14 @@ int main()
         int choice = menu();
         if (choice == 1)
         {
-            int res = getTextFromFile(text);
+            int res = getTextFromFile(text, "plaintext");
             if (res)
             {
                 printf("Text: %s\n", text);
-                char *transformed_text = abash(text);
-                printf("Result: %s\n", transformed_text);
+                char *transformed_text = atbash(text);
+                printf("\nCiphertext: %s\n", transformed_text);
 
-                saveTextToFile(transformed_text);
+                saveTextToFile(transformed_text, "ciphertext");
             }
             else
             {
@@ -34,6 +34,22 @@ int main()
             }
         }
         else if (choice == 2)
+        {
+            int res = getTextFromFile(text, "ciphertext");
+            if (res)
+            {
+                printf("Text: %s\n", text);
+                char *transformed_text = atbash(text);
+                printf("\nPlaintext: %s\n", transformed_text);
+
+                saveTextToFile(transformed_text, "plaintext");
+            }
+            else
+            {
+                printf("Error: Failed to read the file.");
+            }
+        }
+        else if (choice == 3)
         {
             printf("Thank you for using this program.");
             break;
@@ -55,9 +71,10 @@ int menu()
     int choice;
 
     printf("Atbash Cryptograph\n");
-    printf("-------------------\n");
-    printf("[1] Encrypt/Decrypt\n");
-    printf("[2] Exit\n");
+    printf("------------------\n");
+    printf("[1] Encrypt\n");
+    printf("[2] Decrypt\n");
+    printf("[3] Exit\n");
     printf("\nSelect: ");
 
     scanf("%d", &choice);
@@ -77,7 +94,7 @@ int menu()
  * Output: Svool Dliow!
  */
 
-char *abash(char text[])
+char *atbash(char text[])
 {
     // Create an allocated memory for the transformed text.
     char *transformed_text = (char *)calloc(strlen(text) + 1, sizeof(char));
@@ -113,11 +130,11 @@ char *abash(char text[])
  * @return 1 if the text is read successfully, 0 otherwise.
  */
 
-int getTextFromFile(char text[])
+int getTextFromFile(char text[], char type[])
 {
     char filename[MAX_SIZE];
 
-    printf("Enter filename to open: ");
+    printf("Enter filename to open %s: ", type);
     scanf("%[^\n]", filename);
     fflush(stdin);
 
@@ -139,11 +156,11 @@ int getTextFromFile(char text[])
  * @param text The text to be saved to the file.
  */
 
-void saveTextToFile(char text[])
+void saveTextToFile(char text[], char type[])
 {
     char filename[MAX_SIZE];
 
-    printf("Enter filename to save: ");
+    printf("Enter filename to save %s: ", type);
     scanf("%[^\n]", filename);
     fflush(stdin);
 
