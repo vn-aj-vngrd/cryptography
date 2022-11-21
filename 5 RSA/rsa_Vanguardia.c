@@ -240,8 +240,7 @@ char *formalOriginalText(long int text[])
  *
  * @return ciphertext
  */
-long int *
-encrypt(long int plaintext[], int len)
+long int *encrypt(long int plaintext[], int len)
 {
   long int *ciphertext = (long int *)calloc(len + 1, sizeof(long int));
 
@@ -249,7 +248,7 @@ encrypt(long int plaintext[], int len)
   long int p;
   long int q;
 
-  printf("\nEnter two prime numbers (p and q): ");
+  printf("\n\nEnter two prime numbers (p and q): ");
   scanf("%ld %ld", &p, &q);
   fflush(stdin);
 
@@ -265,7 +264,7 @@ encrypt(long int plaintext[], int len)
 
   // printf("e: %ld\nd: %ld\nt: %ld\nn: %ld\n", e, d, t, n);
 
-  printf("\nPrivate Key: %ld,%ld\n", e, n);
+  printf("Private Key: %ld,%ld\n", e, n);
 
   char delim = ',';
   char public_key_str[MAX_SIZE];
