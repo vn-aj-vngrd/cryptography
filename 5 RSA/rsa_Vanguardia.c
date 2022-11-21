@@ -8,17 +8,27 @@
 #define MAX_SIZE 255
 
 int menu();
+
+long int power(long int, long int);
 long int calculateE(long int, long int);
 long int calculateD(long int, long int);
-long int encrypt(long int);
-long int decrypt(long int, char[]);
+long int *formatPlaintext(char[]);
+long int *formatCiphertext(char[]);
+char *formalOriginalText(long int[]);
+
+long int *encrypt(long int[], int);
+long int *decrypt(long int[], char[]);
+
 int getTextFromFile(char[], char[]);
-void saveTextToFile(char[], char[]);
+void saveStringToFile(char[], char[]);
+void saveNumToFile(long int[], char[]);
+void displayNumText(long int[]);
 
 int main()
 {
   do
   {
+    int i;
     int choice = menu();
 
     if (choice == 1)
@@ -28,15 +38,22 @@ int main()
 
       if (r)
       {
-        long int plaintext = atol(plaintext_str);
-        printf("Plaintext: %ld\n", plaintext);
+        // Plaintext in letters
+        printf("Plaintext: %s\n", plaintext_str);
 
-        long int ciphertext = encrypt(plaintext);
-        printf("\n\nCiphertext: %ld\n", ciphertext);
+        // Plaintext in numbers
+        long int *plaintext_num = formatPlaintext(plaintext_str);
+        printf("Plaintext in numbers: ");
+        displayNumText(plaintext_num);
 
-        char ciphertext_str[MAX_SIZE];
-        sprintf(ciphertext_str, "%ld", ciphertext);
-        saveTextToFile(ciphertext_str, "ciphertext");
+        // Encryption Process
+        long int *ciphertext_num = encrypt(plaintext_num, strlen(plaintext_str));
+        printf("\n\nCiphertext: ");
+        displayNumText(ciphertext_num);
+        printf("\n");
+
+        // Save ciphertext to file
+        saveNumToFile(ciphertext_num, "ciphertext");
       }
       else
       {
@@ -50,8 +67,9 @@ int main()
 
       if (r1)
       {
-        long int ciphertext = atol(ciphertext_str);
-        printf("Ciphertext: %ld\n\n", ciphertext);
+        // Ciphertext
+        printf("Ciphertext: %s\n\n", ciphertext_str);
+        long int *ciphertext_num = formatCiphertext(ciphertext_str);
 
         char public_key_str[MAX_SIZE];
         int r2 = getTextFromFile(public_key_str, "public key");
@@ -59,12 +77,17 @@ int main()
         {
           printf("Public key: %s\n", public_key_str);
 
-          long int plaintext = decrypt(ciphertext, public_key_str);
-          printf("\nPlaintext: %ld\n", plaintext);
+          // Decryption Process
+          long int *plaintext = decrypt(ciphertext_num, public_key_str);
+          printf("\nPlaintext: ");
+          displayNumText(plaintext);
 
-          char plaintext_str[MAX_SIZE];
-          sprintf(plaintext_str, "%ld", plaintext);
-          saveTextToFile(plaintext_str, "plaintext");
+          // Convert plaintext to letters
+          char *orignal_message = formalOriginalText(plaintext);
+          printf("\nOriginal message: %s\n", orignal_message);
+
+          // Save plaintext to file
+          saveStringToFile(orignal_message, "plaintext");
         }
         else
         {
@@ -109,6 +132,19 @@ int menu()
 
   return choice;
 }
+
+long int power(long int num, long int pow)
+{
+  long int result = 1;
+  int i;
+  for (i = 0; i < pow; i++)
+  {
+    result *= num;
+  }
+
+  return result;
+}
+
 /*
  * Must be less than t
  * Must be coprime with n and t
@@ -137,22 +173,78 @@ long int calculateD(long int e, long int t)
   long int d, m;
   for (d = 1, m = e; 1; m += e, d++)
   {
-    if (m % t == 1)
+    if (d != e && m % t == 1) //
     {
       return d;
     }
   }
 }
 
+long int *formatPlaintext(char text[])
+{
+  int i, j;
+  int len = strlen(text);
+  long int *num = (long int *)calloc(len + 1, sizeof(long int));
+
+  for (i = 0; i < len; i++)
+  {
+    if (isalpha(text[i]))
+    {
+      num[i] = toupper(text[i]) - 'A' + 1;
+    }
+    else
+    {
+      num[i] = -1;
+    }
+  }
+
+  return num;
+}
+
+long int *formatCiphertext(char text[])
+{
+  int i;
+  long int *ciphertext = (long int *)calloc(MAX_SIZE, sizeof(long int));
+  char delim[] = " ";
+
+  char *token = strtok(text, delim);
+  for (i = 0; token != NULL; i++)
+  {
+    ciphertext[i] = atoi(token);
+    token = strtok(NULL, delim);
+  }
+
+  return ciphertext;
+}
+
+char *formalOriginalText(long int text[])
+{
+  int i;
+  char *original_text = (char *)calloc(MAX_SIZE, sizeof(char));
+
+  for (i = 0; text[i] != '\0'; i++)
+  {
+    original_text[i] = text[i] + 'A' - 1;
+  }
+
+  original_text = (char *)realloc(original_text, (i + 1) * sizeof(char));
+
+  return original_text;
+}
+
 /*
  * Encrypt the plaintext
  *
  * @param plaintext
+ * @param size
  *
  * @return ciphertext
  */
-long int encrypt(long int plaintext)
+long int *
+encrypt(long int plaintext[], int len)
 {
+  long int *ciphertext = (long int *)calloc(len + 1, sizeof(long int));
+
   // Two random prime numbers
   long int p;
   long int q;
@@ -180,13 +272,16 @@ long int encrypt(long int plaintext)
   // concat d + delim + n
   sprintf(public_key_str, "%ld%c%ld", d, delim, n);
   printf("Public Key: %s\n", public_key_str);
-  saveTextToFile(public_key_str, "public key");
+  saveStringToFile(public_key_str, "public key");
 
-  // Encryption c = (msg ^ e) % n
-  long int c = (int)pow(plaintext, e);
-  c = fmod(c, n);
+  // Encryption c = (p[i] ^ e) % n
+  int i;
+  for (i = 0; i < len; i++)
+  {
+    ciphertext[i] = power(plaintext[i], e) % n;
+  }
 
-  return c;
+  return ciphertext;
 }
 
 /*
@@ -197,27 +292,29 @@ long int encrypt(long int plaintext)
  *
  * @return plaintext
  */
-long int decrypt(long int ciphertext, char public_key_str[])
+long int *decrypt(long int ciphertext[], char public_key_str[])
 {
+  long int *plaintext = (long int *)calloc(MAX_SIZE, sizeof(long int));
+
   char delim[] = ",";
   char *token;
 
   char *d_str = strtok(public_key_str, delim);
-  char *n_str = strtok(NULL, delim);
-
-  // e_str to long int
   long int d = atol(d_str);
 
-  // d_str to long int
+  char *n_str = strtok(NULL, delim);
   long int n = atol(n_str);
 
-  // printf("d: %ld\ne: %ld\n", e, d);
+  // // printf("d: %ld\ne: %ld\n", e, d);
 
-  // Decryption m = (c ^ d) % n
-  long int m = pow(ciphertext, d);
-  m = fmod(m, n);
+  // Decryption p = (c[i] ^ d) % n
+  int i;
+  for (i = 0; ciphertext[i] != '\0'; i++)
+  {
+    plaintext[i] = power(ciphertext[i], d) % n;
+  }
 
-  return m;
+  return plaintext;
 }
 
 /*
@@ -227,7 +324,6 @@ long int decrypt(long int ciphertext, char public_key_str[])
  *
  * @return 1 if the text is read successfully, 0 otherwise.
  */
-
 int getTextFromFile(char text[], char type[])
 {
   char filename[MAX_SIZE];
@@ -249,12 +345,12 @@ int getTextFromFile(char text[], char type[])
 }
 
 /*
- * This function saves the text to a file.
+ * This function saves the string text to a file.
  *
  * @param text The text to be saved to the file.
+ * @param type The type of the text.
  */
-
-void saveTextToFile(char text[], char type[])
+void saveStringToFile(char text[], char type[])
 {
   char filename[MAX_SIZE];
 
@@ -272,4 +368,55 @@ void saveTextToFile(char text[], char type[])
   fclose(file);
 
   printf("File saved successfully.");
+}
+
+/*
+ * This function saves the num text to a file.
+ *
+ * @param text The text to be saved to the file.
+ * @param type The type of the text.
+ */
+void saveNumToFile(long int text[], char type[])
+{
+  char filename[MAX_SIZE];
+
+  printf("Enter filename to save %s: ", type);
+  scanf("%[^\n]", filename);
+  fflush(stdin);
+
+  FILE *file = fopen(strcat(filename, ".txt"), "w");
+  if (!file)
+  {
+    return;
+  }
+
+  int i;
+  for (i = 0; text[i] != '\0'; i++)
+  {
+    if (text[i + 1] == '\0')
+    {
+      fprintf(file, "%ld", text[i]);
+    }
+    else
+    {
+      fprintf(file, "%ld ", text[i]);
+    }
+  }
+
+  fclose(file);
+
+  printf("File saved successfully.");
+}
+
+/*
+ * This function prints the text.
+ *
+ * @param text The text to be printed.
+ */
+void displayNumText(long int text[])
+{
+  for (int i = 0; text[i] != '\0'; i++)
+  {
+    printf("%ld ", text[i]);
+  }
 }
