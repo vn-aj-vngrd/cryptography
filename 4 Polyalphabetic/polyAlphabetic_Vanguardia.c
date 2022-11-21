@@ -81,8 +81,9 @@ int menu()
 {
     int choice;
 
+    printf("--------------------------\n");
     printf("Polyalphabetic Cryptograph\n");
-    printf("-------------------------\n");
+    printf("--------------------------\n");
     printf("[1] Encrypt\n");
     printf("[2] Decrypt\n");
     printf("[3] Exit\n");

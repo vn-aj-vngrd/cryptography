@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <time.h>
 
 #define MAX_SIZE 255
 
@@ -9,8 +10,8 @@ int menu();
 char *vernam(char[], char[]);
 char *generateOTP(char[]);
 int validateOTP(char[], char[]);
-int getTextFromFile(char[]);
-void saveTextToFile(char[]);
+int getTextFromFile(char[], char[]);
+void saveTextToFile(char[], char[]);
 
 int main()
 {
@@ -21,21 +22,23 @@ int main()
         int choice = menu();
         if (choice == 1)
         {
-            int res = getTextFromFile(text);
+            int res = getTextFromFile(text, "plaintext");
             if (res)
             {
+                printf("Text: %s\n\n", text);
+
                 char otp[MAX_SIZE];
                 int res = validateOTP(otp, text);
 
                 if (res)
                 {
-                    printf("OTP: %s\n", otp);
-                    printf("Text: %s\n", text);
+
+                    printf("OTP: %s\n\n", otp);
 
                     char *transformed_text = vernam(text, otp);
-                    printf("Result: %s\n", transformed_text);
+                    printf("Ciphertext: %s\n", transformed_text);
 
-                    saveTextToFile(transformed_text);
+                    saveTextToFile(transformed_text, "ciphertext");
                 }
                 else
                 {
@@ -49,13 +52,43 @@ int main()
         }
         else if (choice == 2)
         {
-            int res = getTextFromFile(text);
+            int res = getTextFromFile(text, "ciphertext");
+            if (res)
+            {
+                printf("Text: %s\n\n", text);
+
+                char otp[MAX_SIZE];
+                int res = validateOTP(otp, text);
+
+                if (res)
+                {
+
+                    printf("OTP: %s\n\n", otp);
+
+                    char *transformed_text = vernam(text, otp);
+                    printf("Plaintext: %s\n", transformed_text);
+
+                    saveTextToFile(transformed_text, "plaintext");
+                }
+                else
+                {
+                    printf("\nError: OTP is not valid.");
+                }
+            }
+            else
+            {
+                printf("Error: Failed to read the file.");
+            }
+        }
+        else if (choice == 3)
+        {
+            int res = getTextFromFile(text, "text");
             if (res)
             {
                 char *otp = generateOTP(text);
-                printf("OTP: %s\n", otp);
+                printf("\nOTP: %s\n", otp);
 
-                saveTextToFile(otp);
+                saveTextToFile(otp, "otp");
             }
             else
             {
@@ -83,11 +116,13 @@ int menu()
 {
     int choice;
 
+    printf("------------------\n");
     printf("Vernam Cryptograph\n");
-    printf("-------------------\n");
-    printf("[1] Encrypt/Decrypt\n");
-    printf("[2] Generate OTP\n");
-    printf("[3] Exit\n");
+    printf("------------------\n");
+    printf("[1] Encrypt\n");
+    printf("[2] Decrypt\n");
+    printf("[3] Generate OTP\n");
+    printf("[4] Exit\n");
     printf("\nSelect: ");
 
     scanf("%d", &choice);
@@ -150,8 +185,11 @@ char *vernam(char text[], char key[])
 
 char *generateOTP(char text[])
 {
+    // Generate random seed by time
+    srand(time(NULL));
+
     char *otp = (char *)calloc((strlen(text)) + 1, sizeof(char));
-    
+
     int i;
     for (i = 0; i < strlen(text); i++)
     {
@@ -210,11 +248,11 @@ int validateOTP(char otp[], char text[])
  * @return 1 if the text is read successfully, 0 otherwise.
  */
 
-int getTextFromFile(char text[])
+int getTextFromFile(char text[], char type[])
 {
     char filename[MAX_SIZE];
 
-    printf("Enter filename to open: ");
+    printf("Enter filename to open %s: ", type);
     scanf("%[^\n]", filename);
     fflush(stdin);
 
@@ -236,18 +274,18 @@ int getTextFromFile(char text[])
  * @param text The text to be saved to the file.
  */
 
-void saveTextToFile(char text[])
+void saveTextToFile(char text[], char type[])
 {
     char filename[MAX_SIZE];
 
-    printf("Enter filename to save: ");
+    printf("Enter filename to save %s: ", type);
     scanf("%[^\n]", filename);
     fflush(stdin);
 
     FILE *file = fopen(strcat(filename, ".txt"), "w");
     if (!file)
     {
-        printf("Failed to save file.");
+        return;
     }
 
     fprintf(file, "%s", text);
