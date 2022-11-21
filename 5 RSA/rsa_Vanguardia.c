@@ -15,7 +15,7 @@ long int decrypt(long int, char[]);
 int getTextFromFile(char[], char[]);
 void saveTextToFile(char[], char[]);
 
-long int main()
+int main()
 {
   do
   {
