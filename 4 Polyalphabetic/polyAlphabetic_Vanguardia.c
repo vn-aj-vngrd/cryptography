@@ -10,8 +10,8 @@ int menu();
 char *generateKey(char[]);
 char *encrypt(char[], char[]);
 char *decrypt(char[], char[]);
-int getTextFromFile(char[]);
-void saveTextToFile(char[]);
+int getTextFromFile(char[], char[]);
+void saveTextToFile(char[], char[]);
 
 int main()
 {
@@ -22,18 +22,18 @@ int main()
         int choice = menu();
         if (choice == 1)
         {
-            int res = getTextFromFile(text);
+            int res = getTextFromFile(text, "plaintext");
             if (res)
             {
-                char *key = generateKey(text);
-                printf("Generated Key: %s\n", key);
+                printf("Plaintext: %s\n\n", text);
 
-                printf("Text: %s\n", text);
+                char *key = generateKey(text);
+                printf("Generated Key: %s\n\n", key);
 
                 char *encrypted_text = encrypt(text, key);
-                printf("Encrypted Text: %s\n", encrypted_text);
+                printf("Ciphertext: %s\n", encrypted_text);
 
-                saveTextToFile(encrypted_text);
+                saveTextToFile(encrypted_text, "ciphertext");
             }
             else
             {
@@ -42,18 +42,18 @@ int main()
         }
         else if (choice == 2)
         {
-            int res = getTextFromFile(text);
+            int res = getTextFromFile(text, "ciphertext");
             if (res)
             {
-                char *key = generateKey(text);
-                printf("Generated Key: %s\n", key);
+                printf("Ciphertext: %s\n\n", text);
 
-                printf("Text: %s\n", text);
+                char *key = generateKey(text);
+                printf("Generated Key: %s\n\n", key);
 
                 char *decrypted_text = decrypt(text, key);
-                printf("Decrypted Text: %s\n", decrypted_text);
+                printf("Plaintext: %s\n", decrypted_text);
 
-                saveTextToFile(decrypted_text);
+                saveTextToFile(decrypted_text, "plaintext");
             }
             else
             {
@@ -229,11 +229,11 @@ char *decrypt(char cipher_text[], char key[])
  * @return 1 if the text is read successfully, 0 otherwise.
  */
 
-int getTextFromFile(char text[])
+int getTextFromFile(char text[], char type[])
 {
     char filename[MAX_SIZE];
 
-    printf("Enter filename to open: ");
+    printf("Enter filename to open %s: ", type);
     scanf("%[^\n]", filename);
     fflush(stdin);
 
@@ -255,12 +255,12 @@ int getTextFromFile(char text[])
  * @param text The text to be saved to the file.
  */
 
-void saveTextToFile(char text[])
+void saveTextToFile(char text[], char type[])
 {
     char filename[MAX_SIZE];
 
-    printf("Enter filename to save: ");
-    scanf("%[^\n]", &filename);
+    printf("Enter filename to save %s: ", type);
+    scanf("%[^\n]", filename);
     fflush(stdin);
 
     FILE *file = fopen(strcat(filename, ".txt"), "w");

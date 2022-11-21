@@ -82,6 +82,7 @@ int menu()
 {
     int choice;
 
+    printf("--------------------\n");
     printf("Shifting Cryptograph\n");
     printf("--------------------\n");
     printf("[1] Encrypt\n");
