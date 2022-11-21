@@ -109,7 +109,10 @@ int menu()
 
   return choice;
 }
-
+/*
+ * Must be less than t
+ * Must be coprime with n and t
+ */
 long int calculateE(long int n, long int t)
 {
   long int e;
@@ -125,9 +128,12 @@ long int calculateE(long int n, long int t)
   return -1;
 }
 
+/*
+ * Choose e x d mod t = 1
+ */
 long int calculateD(long int e, long int t)
 {
-
+  // loop through the multiples of t and return when mod t is 1
   long int d, m;
   for (d = 1, m = e; 1; m += e, d++)
   {
@@ -138,6 +144,13 @@ long int calculateD(long int e, long int t)
   }
 }
 
+/*
+ * Encrypt the plaintext
+ *
+ * @param plaintext
+ *
+ * @return ciphertext
+ */
 long int encrypt(long int plaintext)
 {
   // Two random prime numbers
@@ -176,6 +189,14 @@ long int encrypt(long int plaintext)
   return c;
 }
 
+/*
+ * Decrypt the ciphertext
+ *
+ * @param ciphertext
+ * @param public_key_str
+ *
+ * @return plaintext
+ */
 long int decrypt(long int ciphertext, char public_key_str[])
 {
   char delim[] = ",";
