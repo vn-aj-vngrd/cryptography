@@ -173,7 +173,7 @@ long int calculateD(long int e, long int t)
   long int d, m;
   for (d = 1, m = e; 1; m += e, d++)
   {
-    if (d != e && m % t == 1) //
+    if (d != e && m % t == 1)
     {
       return d;
     }
@@ -272,7 +272,7 @@ long int *encrypt(long int plaintext[], int len)
   sprintf(public_key_str, "%ld%c%ld", d, delim, n);
   printf("Public Key: %s\n", public_key_str);
   saveStringToFile(public_key_str, "public key");
-
+  
   // Encryption c = (p[i] ^ e) % n
   int i;
   for (i = 0; i < len; i++)
