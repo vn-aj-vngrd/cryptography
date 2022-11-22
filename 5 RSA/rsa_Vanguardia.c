@@ -228,7 +228,7 @@ char *encrypt(char plaintext[])
 
 char *decrypt(char ciphertext[], char key[])
 {
-  char *plaintext = (char *)calloc(MAX_SIZE, sizeof(char));
+  char *plaintext = (char *)calloc(strlen(ciphertext) + 1, sizeof(char));
 
   char delim[] = ",";
   char *token;
