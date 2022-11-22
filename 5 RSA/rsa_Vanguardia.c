@@ -128,6 +128,10 @@ int menu()
   return choice;
 }
 
+/*
+ * Implement exponentiation function
+ */
+
 unsigned long long int power(unsigned long long int num, unsigned long long int pow)
 {
   unsigned long long int result = 1;
