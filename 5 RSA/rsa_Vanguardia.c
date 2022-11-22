@@ -9,7 +9,7 @@
 
 #define MAX_ALPHA 26
 #define MAX_SIZE 256
-#define MAX_D 300
+#define MAX_D 2048
 
 char *encrypt(char plaintext[]);
 char *decrypt(char ciphertext[], char key[]);
@@ -202,7 +202,7 @@ char *encrypt(char plaintext[])
       bignum_pow_mod(&M, &E, &N, &C);
 
       // Convert C to int
-      int c = bignum_to_int(&C);
+      int c = bignum_to_int(&C) % 26;
 
       //  Convert it to its orignal ascii
       ciphertext[i] = isupper(plaintext[i]) ? c + 'A' - 1 : c + 'a' - 1;
@@ -271,7 +271,7 @@ char *decrypt(char ciphertext[], char key[])
       bignum_pow_mod(&C, &D, &N, &M);
 
       // Convert M to int
-      int m = bignum_to_int(&M);
+      int m = bignum_to_int(&M) % 26;
 
       //  Convert it to its orignal ascii
       plaintext[i] = isupper(ciphertext[i]) ? m + 'A' - 1 : m + 'a' - 1;

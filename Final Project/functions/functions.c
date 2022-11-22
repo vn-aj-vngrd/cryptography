@@ -43,16 +43,18 @@ void rsa_encrypt(char plaintext[])
     // Two prime numbers
     int p;
     int q;
+    int r;
+    int s;
 
-    printf("\n\nEnter two different prime numbers (p and q): ");
-    scanf("%d %d", &p, &q);
+    printf("\n\nEnter 4 different prime numbers: ");
+    scanf("%d %d %d %d", &p, &q, &r, &s);
     fflush(stdin);
 
-    // Let N = p * q
-    int n = p * q;
+    // Let N = p * q * r * s
+    int n = p * q * r * s;
 
     // Get the Euler Totient
-    int t = (p - 1) * (q - 1);
+    int t = (p - 1) * (q - 1) * (r - 1) * (s - 1);
 
     // (e * d) mod t = 1
     int e = calculateE(n, t);
@@ -112,7 +114,7 @@ void rsa_encrypt(char plaintext[])
             bignum_pow_mod(&M, &E, &N, &C);
 
             // Convert C to int
-            int c = bignum_to_int(&C);
+            int c = bignum_to_int(&C) % 26;
 
             //  Convert it to its orignal ascii
             plaintext[i] = isupper(plaintext[i]) ? c + 'A' - 1 : c + 'a' - 1;
@@ -175,7 +177,7 @@ void rsa_decrypt(char ciphertext[], char key[])
             bignum_pow_mod(&C, &D, &N, &M);
 
             // Convert M to int
-            int m = bignum_to_int(&M);
+            int m = bignum_to_int(&M) % 26;
 
             //  Convert it to its orignal ascii
             ciphertext[i] = isupper(ciphertext[i]) ? m + 'A' - 1 : m + 'a' - 1;

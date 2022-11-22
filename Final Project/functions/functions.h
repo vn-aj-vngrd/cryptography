@@ -14,7 +14,7 @@
 // Macros
 #define MAX_ALPHA 26
 #define MAX_SIZE 256
-#define MAX_D 300
+#define MAX_D 2048
 
 // Function Prototypes
 char *encrypt(char plaintext[]);
