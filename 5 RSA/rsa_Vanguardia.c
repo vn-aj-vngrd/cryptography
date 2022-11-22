@@ -11,18 +11,18 @@
 #define MAX_SIZE 256
 #define MAX_D 300
 
-char *encrypt(char[]);
-char *decrypt(char[], char[]);
+char *encrypt(char plaintext[]);
+char *decrypt(char ciphertext[], char public_key_str[]);
 
-int calculateE(int, int);
-int calculateD(int, int);
+int calculateE(int n, int t);
+int calculateD(int e, int t);
 
-int *formatPlaintext(char[]);
-int *formatCiphertext(char[]);
+int *formatPlaintext(char text[]);
+int *formatCiphertext(char text[]);
 
-int getTextFromFile(char[], char[]);
-void saveTextToFile(char[], char[]);
-void displayNumText(int[]);
+int getTextFromFile(char text[], char type[]);
+void saveTextToFile(char text[], char type[]);
+void displayNumText(int text[]);
 int menu();
 
 int main()
@@ -40,7 +40,7 @@ int main()
       if (r)
       {
         // Display Plaintext in letters
-        printf("Plaintext: %s", plaintext_str);
+        printf("Plaintext: %s\n", plaintext_str);
 
         // Display Plaintext in numbers
         int *plaintext_num = formatPlaintext(plaintext_str);
@@ -49,7 +49,7 @@ int main()
 
         // Encryption Process
         char *ciphertext = encrypt(plaintext_str);
-        printf("\n\nCiphertext: %s", ciphertext);
+        printf("\n\nCiphertext: %s\n", ciphertext);
 
         // Save ciphertext to file
         saveTextToFile(ciphertext, "ciphertext");
@@ -84,7 +84,7 @@ int main()
 
           // Decryption Process
           char *plaintext = decrypt(ciphertext_str, key_str);
-          printf("\nPlaintext: %s", plaintext);
+          printf("\nPlaintext: %s\n", plaintext);
 
           // Save plaintext to file
           saveTextToFile(plaintext, "plaintext");
