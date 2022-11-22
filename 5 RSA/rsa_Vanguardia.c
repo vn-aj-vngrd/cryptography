@@ -171,13 +171,20 @@ long int calculateD(long int e, long int t)
 {
   // loop through the multiples of t and return when mod t is 1
   long int d, m;
-  for (d = 1, m = e; 1; m += e, d++)
+  for (d = 1, m = e; d < 100; m += e, d++)
   {
     if (d != e && m % t == 1)
     {
-      return d;
+      printf("%ld ", d);
     }
   }
+
+  long int val;
+  printf("\nChoose a d value from above: ");
+  scanf("%ld", &val);
+  fflush(stdin);
+
+  return val;
 }
 
 long int *formatPlaintext(char text[])
@@ -264,7 +271,7 @@ long int *encrypt(long int plaintext[], int len)
 
   // printf("e: %ld\nd: %ld\nt: %ld\nn: %ld\n", e, d, t, n);
 
-  printf("Private Key: %ld,%ld\n", e, n);
+  printf("\nPrivate Key: %ld,%ld\n", e, n);
 
   char delim = ',';
   char public_key_str[MAX_SIZE];
@@ -272,7 +279,7 @@ long int *encrypt(long int plaintext[], int len)
   sprintf(public_key_str, "%ld%c%ld", d, delim, n);
   printf("Public Key: %s\n", public_key_str);
   saveStringToFile(public_key_str, "public key");
-  
+
   // Encryption c = (p[i] ^ e) % n
   int i;
   for (i = 0; i < len; i++)
