@@ -9,8 +9,10 @@
 
 #define MAX_ALPHA 26
 #define MAX_SIZE 256
+#define MAX_D 300
 
-int menu();
+char *encrypt(char[]);
+char *decrypt(char[], char[]);
 
 int calculateE(int, int);
 int calculateD(int, int);
@@ -18,12 +20,10 @@ int calculateD(int, int);
 int *formatPlaintext(char[]);
 int *formatCiphertext(char[]);
 
-char *encrypt(char[]);
-char *decrypt(char[], char[]);
-
 int getTextFromFile(char[], char[]);
 void saveTextToFile(char[], char[]);
 void displayNumText(int[]);
+int menu();
 
 int main()
 {
@@ -115,119 +115,9 @@ int main()
   return 0;
 }
 
-int menu()
-{
-  int choice;
-
-  printf("---------------\n");
-  printf("RSA Cryptograph\n");
-  printf("---------------\n");
-  printf("[1] Encrypt\n");
-  printf("[2] Decrypt\n");
-  printf("[3] Exit\n");
-  printf("\nSelect: ");
-
-  scanf("%d", &choice);
-  fflush(stdin);
-
-  return choice;
-}
-
-/*
- * E must be less than t
- * E must be coprime with n and t
- */
-int calculateE(int n, int t)
-{
-  int e;
-
-  for (e = 2; e < t; e++)
-  {
-    if (e % 2 != 0 && (n % e) != 0 && (t % e) != 0)
-    {
-      return e;
-    }
-  }
-
-  return -1;
-}
-
-/*
- * loop through the multiples of e
- * Display all candidates when m mod t is 1
- * Allow user to select a d value from the displayed d candidates
- */
-int calculateD(int e, int t)
-{
-  int d, m, val;
-
-  for (d = 1, m = e; d < 256; m += e, d++)
-  {
-    if (d != e && m % t == 1)
-    {
-      printf("%d ", d);
-    }
-  }
-
-  printf("\nChoose a d value from above: ");
-  scanf("%d", &val);
-  fflush(stdin);
-
-  return val;
-}
-
-/*
- * Convert plaintext to numbers
- *
- * @param plaintext_str Plaintext in letters
- * @return Plaintext in numbers
- */
-int *formatPlaintext(char text[])
-{
-  int i, j;
-  int len = strlen(text);
-  int *num = (int *)calloc(len + 1, sizeof(int));
-
-  for (i = 0; i < len; i++)
-  {
-    if (isalpha(text[i]))
-    {
-      num[i] = toupper(text[i]) - 'A' + 1;
-    }
-    else
-    {
-      num[i] = ' ';
-    }
-  }
-
-  return num;
-}
-
-/*
- * Format ciphertext to numbers
- *
- * @param text: ciphertext in string
- * @return: ciphertext in numbers
- */
-int *formatCiphertext(char text[])
-{
-  int i;
-  int *ciphertext = (int *)calloc(MAX_SIZE, sizeof(int));
-
-  for (i = 0; i < strlen(text); i++)
-  {
-    if (isalpha(text[i]))
-    {
-      ciphertext[i] = toupper(text[i]) - 'A' + 1;
-    }
-    else
-    {
-      ciphertext[i] = 32;
-    }
-  }
-
-  return ciphertext;
-}
+/************************************************************************************************************************
+ * Main Functions (Encypt/Decrypt)
+ ************************************************************************************************************************/
 
 /*
  * Encrypt the plaintext
@@ -395,6 +285,110 @@ char *decrypt(char ciphertext[], char public_key_str[])
   return plaintext;
 }
 
+/************************************************************************************************************************
+ * Helper Functions
+ ************************************************************************************************************************/
+
+/*
+ * E must be less than t
+ * E must be coprime with n and t
+ */
+int calculateE(int n, int t)
+{
+  int e;
+
+  for (e = 2; e < t; e++)
+  {
+    if (e % 2 != 0 && (n % e) != 0 && (t % e) != 0)
+    {
+      return e;
+    }
+  }
+
+  return -1;
+}
+
+/*
+ * loop through the multiples of e
+ * Display all candidates when m mod t is 1
+ * Allow user to select a d value from the displayed d candidates
+ */
+int calculateD(int e, int t)
+{
+  int d, m, val;
+
+  for (d = 1, m = e; d < MAX_D; m += e, d++)
+  {
+    if (d != e && m % t == 1)
+    {
+      printf("%d ", d);
+    }
+  }
+
+  printf("\nChoose a d value from above: ");
+  scanf("%d", &val);
+  fflush(stdin);
+
+  return val;
+}
+
+/*
+ * Convert plaintext to numbers
+ *
+ * @param plaintext_str Plaintext in letters
+ * @return Plaintext in numbers
+ */
+int *formatPlaintext(char text[])
+{
+  int i, j;
+  int len = strlen(text);
+  int *num = (int *)calloc(len + 1, sizeof(int));
+
+  for (i = 0; i < len; i++)
+  {
+    if (isalpha(text[i]))
+    {
+      num[i] = toupper(text[i]) - 'A' + 1;
+    }
+    else
+    {
+      num[i] = ' ';
+    }
+  }
+
+  return num;
+}
+
+/*
+ * Format ciphertext to numbers
+ *
+ * @param text: ciphertext in string
+ * @return: ciphertext in numbers
+ */
+int *formatCiphertext(char text[])
+{
+  int i;
+  int *ciphertext = (int *)calloc(MAX_SIZE, sizeof(int));
+
+  for (i = 0; i < strlen(text); i++)
+  {
+    if (isalpha(text[i]))
+    {
+      ciphertext[i] = toupper(text[i]) - 'A' + 1;
+    }
+    else
+    {
+      ciphertext[i] = 32;
+    }
+  }
+
+  return ciphertext;
+}
+
+/************************************************************************************************************************
+ * Utility Functions
+ ************************************************************************************************************************/
+
 /*
  * This function gets the text from a file.
  *
@@ -459,4 +453,25 @@ void displayNumText(int text[])
   {
     printf("%d ", text[i]);
   }
+}
+
+/*
+ * This function displays the menu.
+ */
+int menu()
+{
+  int choice;
+
+  printf("---------------\n");
+  printf("RSA Cryptograph\n");
+  printf("---------------\n");
+  printf("[1] Encrypt\n");
+  printf("[2] Decrypt\n");
+  printf("[3] Exit\n");
+  printf("\nSelect: ");
+
+  scanf("%d", &choice);
+  fflush(stdin);
+
+  return choice;
 }
