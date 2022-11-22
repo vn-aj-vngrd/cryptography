@@ -133,8 +133,8 @@ int menu()
 }
 
 /*
- * Must be less than t
- * Must be coprime with n and t
+ * E must be less than t
+ * E must be coprime with n and t
  */
 int calculateE(int n, int t)
 {
@@ -152,14 +152,14 @@ int calculateE(int n, int t)
 }
 
 /*
- * loop through the multiples of t,
+ * loop through the multiples of e
  * Display all candidates when m mod t is 1
- * Allow user to select a d value
+ * Allow user to select a d value from the displayed d candidates
  */
 int calculateD(int e, int t)
 {
-  // find a number D such that ((E * D) / T) % T == 1
-  int d, m;
+  int d, m, val;
+
   for (d = 1, m = e; d < 256; m += e, d++)
   {
     if (d != e && m % t == 1)
@@ -168,7 +168,6 @@ int calculateD(int e, int t)
     }
   }
 
-  int val;
   printf("\nChoose a d value from above: ");
   scanf("%d", &val);
   fflush(stdin);
