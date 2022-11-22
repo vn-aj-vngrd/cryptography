@@ -4,14 +4,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "bn.c"
-
 #define MAX_ALPHA 26
 #define MAX_SIZE 255
 
 int menu();
 
-void pow_mod_faster(struct bn *a, struct bn *b, struct bn *n, struct bn *res);
+int power(int, int);
 int calculateE(int, int);
 int calculateD(int, int);
 
@@ -74,7 +72,7 @@ int main()
         printf("\n\n");
 
         char public_key_str[MAX_SIZE];
-        int r2 = getTextFromFile(public_key_str, "key");
+        int r2 = getTextFromFile(public_key_str, "public key");
         if (r2)
         {
           printf("Public key: %s\n", public_key_str);
@@ -139,33 +137,16 @@ int menu()
  * @return base^exponent
  */
 
-/* O(log n) */
-void pow_mod_faster(struct bn *a, struct bn *b, struct bn *n, struct bn *res)
+int power(int base, int exponent)
 {
-  bignum_from_int(res, 1); /* r = 1 */
-
-  struct bn tmpa;
-  struct bn tmpb;
-  struct bn tmp;
-  bignum_assign(&tmpa, a);
-  bignum_assign(&tmpb, b);
-
-  while (1)
+  int result = 1;
+  int i;
+  for (i = 0; i < exponent; i++)
   {
-    if (tmpb.array[0] & 1) /* if (b % 2) */
-    {
-      bignum_mul(res, &tmpa, &tmp); /*   r = r * a % m */
-      bignum_mod(&tmp, n, res);
-    }
-    bignum_rshift(&tmpb, &tmp, 1); /* b /= 2 */
-    bignum_assign(&tmpb, &tmp);
-
-    if (bignum_is_zero(&tmpb))
-      break;
-
-    bignum_mul(&tmpa, &tmpa, &tmp);
-    bignum_mod(&tmp, n, &tmpa);
+    result *= base;
   }
+
+  return result;
 }
 
 /*
@@ -194,9 +175,8 @@ int calculateE(int n, int t)
  */
 int calculateD(int e, int t)
 {
-  // find a number D such that ((E * D) / T) % T == 1
   int d, m;
-  for (d = 1, m = e; d < 256; m += e, d++)
+  for (d = 1, m = e; d < 100; m += e, d++)
   {
     if (d != e && m % t == 1)
     {
@@ -252,14 +232,7 @@ int *formatCiphertext(char text[])
 
   for (i = 0; i < strlen(text); i++)
   {
-    if (isalpha(text[i]))
-    {
-      ciphertext[i] = toupper(text[i]) - 'A' + 1;
-    }
-    else
-    {
-      ciphertext[i] = 32;
-    }
+    ciphertext[i] = text[i] - 'A' + 1;
   }
 
   return ciphertext;
@@ -295,51 +268,29 @@ char *encrypt(char plaintext[])
   int e = calculateE(n, t);
   int d = calculateD(e, t);
 
-  // Debugging purpose
   // printf("e: %d\nd: %d\nt: %d\nn: %d\n", e, d, t, n);
 
-  // delimiter
   char delim = ',';
 
-  // Save private key
   char private_key_str[MAX_SIZE];
   sprintf(private_key_str, "%d%c%d", e, delim, n);
   printf("\nPrivate Key: %s\n", private_key_str);
   saveTextToFile(private_key_str, "private key");
 
-  // Save public key
   char public_key_str[MAX_SIZE];
   sprintf(public_key_str, "%d%c%d", d, delim, n);
   printf("\n\nPublic Key: %s\n", public_key_str);
   saveTextToFile(public_key_str, "public key");
 
-  // Declare bignum variables
-  struct bn M, C, E, N;
-
-  // Initialize bignum variables
-  bignum_init(&M);
-  bignum_init(&C);
-  bignum_init(&E);
-  bignum_init(&N);
-
-  // Encryption Process
+  // Encryption c = (p ^ e) % n
   int i;
   for (i = 0; i < strlen(plaintext); i++)
   {
     if (isalpha(plaintext[i]))
     {
-      // Assign bignum
-      bignum_from_int(&M, toupper(plaintext[i]) - 'A' + 1);
-      bignum_from_int(&E, e);
-      bignum_from_int(&N, n);
+      int p = toupper(plaintext[i]) - 'A' + 1;
+      int c = power(p, e) % n;
 
-      // Calculate C = (M ^ E) % N
-      pow_mod_faster(&M, &E, &N, &C);
-
-      // Convert C to int
-      int c = bignum_to_int(&C);
-
-      //  Convert it to its orignal ascii
       ciphertext[i] = isupper(plaintext[i]) ? c + 'A' - 1 : c + 'a' - 1;
     }
     else
@@ -366,45 +317,24 @@ char *decrypt(char ciphertext[], char public_key_str[])
   char delim[] = ",";
   char *token;
 
-  // Get the d
   char *d_str = strtok(public_key_str, delim);
   int d = atol(d_str);
 
-  // Get the n
   char *n_str = strtok(NULL, delim);
   int n = atol(n_str);
 
-  // Debugging purpose
-  // printf("d: %d\nn: %d\n", d, n);
+  // printf("d: %d\ne: %d\n", d, n);
 
-  // Declare bignum variables
-  struct bn M, C, D, N;
-
-  // Initialize bignum variables
-  bignum_init(&M);
-  bignum_init(&C);
-  bignum_init(&D);
-  bignum_init(&N);
-
-  // Decryption
+  // Decryption p = (c ^ d) % n
   int i;
   for (i = 0; ciphertext[i] != '\0'; i++)
   {
     if (isalpha(ciphertext[i]))
     {
-      // Assign bignum variables
-      bignum_from_int(&C, toupper(ciphertext[i]) - 'A' + 1);
-      bignum_from_int(&D, d);
-      bignum_from_int(&N, n);
+      int c = toupper(ciphertext[i]) - 'A' + 1;
+      int p = power(c, d) % n;
 
-      // Calculate M = (C ^ D) % N
-      pow_mod_faster(&C, &D, &N, &M);
-
-      // Convert M to int
-      int m = bignum_to_int(&M);
-
-      // Convert it to its orignal ascii
-      plaintext[i] = isupper(ciphertext[i]) ? m + 'A' - 1 : m + 'a' - 1;
+      plaintext[i] = isupper(ciphertext[i]) ? p + 'A' - 1 : p + 'a' - 1;
     }
     else
     {
