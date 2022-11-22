@@ -127,6 +127,7 @@ int main()
  *
  * @return ciphertext
  */
+
 char *encrypt(char plaintext[])
 {
   char *ciphertext = (char *)calloc(strlen(plaintext) + 1, sizeof(char));
@@ -225,6 +226,7 @@ char *encrypt(char plaintext[])
  *
  * @return plaintext
  */
+
 char *decrypt(char ciphertext[], char public_key_str[])
 {
   char *plaintext = (char *)calloc(MAX_SIZE, sizeof(char));
@@ -293,6 +295,7 @@ char *decrypt(char ciphertext[], char public_key_str[])
  * E must be less than t
  * E must be coprime with n and t
  */
+
 int calculateE(int n, int t)
 {
   int e;
@@ -313,6 +316,7 @@ int calculateE(int n, int t)
  * Display all candidates when m mod t is 1
  * Allow user to select a d value from the displayed d candidates
  */
+
 int calculateD(int e, int t)
 {
   int d, m, val;
@@ -338,6 +342,7 @@ int calculateD(int e, int t)
  * @param plaintext_str Plaintext in letters
  * @return Plaintext in numbers
  */
+
 int *formatPlaintext(char text[])
 {
   int i, j;
@@ -365,6 +370,7 @@ int *formatPlaintext(char text[])
  * @param text: ciphertext in string
  * @return: ciphertext in numbers
  */
+
 int *formatCiphertext(char text[])
 {
   int i;
@@ -396,6 +402,7 @@ int *formatCiphertext(char text[])
  *
  * @return 1 if the text is read successfully, 0 otherwise.
  */
+
 int getTextFromFile(char text[], char type[])
 {
   char filename[MAX_SIZE];
@@ -422,6 +429,7 @@ int getTextFromFile(char text[], char type[])
  * @param text The text to be saved to the file.
  * @param type The type of the text.
  */
+
 void saveTextToFile(char text[], char type[])
 {
   char filename[MAX_SIZE];
@@ -447,6 +455,7 @@ void saveTextToFile(char text[], char type[])
  *
  * @param text The text to be printed.
  */
+
 void displayNumText(int text[])
 {
   for (int i = 0; text[i] != '\0'; i++)
@@ -458,6 +467,7 @@ void displayNumText(int text[])
 /*
  * This function displays the menu.
  */
+
 int menu()
 {
   int choice;
