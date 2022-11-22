@@ -16,16 +16,16 @@ int main()
             if (r)
             {
                 // Display Plaintext in letters
-                printf("Plaintext: %s", plaintext_str);
+                printf("Plaintext: %s\n", plaintext_str);
 
                 // Display Plaintext in numbers
-                int *plaintext_num = formatPlaintext(plaintext_str);
+                int *plaintext_num = formatTextInNum(plaintext_str);
                 printf("Plaintext in numbers: ");
                 displayNumText(plaintext_num);
 
                 // Encryption Process
-                char *ciphertext = rsa_encrypt(plaintext_str);
-                printf("\n\nCiphertext: %s", ciphertext);
+                char *ciphertext = encrypt(plaintext_str);
+                printf("\n\nCiphertext: %s\n", ciphertext);
 
                 // Save ciphertext to file
                 saveTextToFile(ciphertext, "ciphertext");
@@ -43,10 +43,10 @@ int main()
             if (r1)
             {
                 // Display Ciphertext in letters
-                printf("Ciphertext: %s", ciphertext_str);
+                printf("Ciphertext: %s\n", ciphertext_str);
 
                 // Display Ciphertext in numbers
-                int *ciphertext_num = formatCiphertext(ciphertext_str);
+                int *ciphertext_num = formatTextInNum(ciphertext_str);
                 printf("Ciphertext in numbers: ");
                 displayNumText(ciphertext_num);
                 printf("\n\n");
@@ -59,8 +59,8 @@ int main()
                     printf("Key: %s\n", key_str);
 
                     // Decryption Process
-                    char *plaintext = rsa_decrypt(ciphertext_str, key_str);
-                    printf("\nPlaintext: %s", plaintext);
+                    char *plaintext = decrypt(ciphertext_str, key_str);
+                    printf("\nPlaintext: %s\n", plaintext);
 
                     // Save plaintext to file
                     saveTextToFile(plaintext, "plaintext");

@@ -1,21 +1,45 @@
 #include "functions.h"
 
 /************************************************************************************************************************
- * Main Functions (Encypt/Decrypt)
+ * Main Functions
+ ************************************************************************************************************************/
+
+char *encrypt(char plaintext[])
+{
+    int len = strlen(plaintext);
+    char *ciphertext = (char *)calloc(len + 1, sizeof(char));
+    memcpy(ciphertext, plaintext, len + 1);
+
+    rsa_encrypt(ciphertext);
+    atbash(ciphertext);
+
+    return ciphertext;
+}
+
+char *decrypt(char ciphertext[], char key[])
+{
+    int len = strlen(ciphertext);
+    char *plaintext = (char *)calloc(len + 1, sizeof(char));
+    memcpy(plaintext, ciphertext, len + 1);
+
+    atbash(plaintext);
+    rsa_decrypt(plaintext, key);
+
+    return plaintext;
+}
+
+/************************************************************************************************************************
+ * Cryptograph Functions
  ************************************************************************************************************************/
 
 /*
- * Encrypt the plaintext
+ * Encrypt the plaintext via RSA
  *
  * @param plaintext
- * @param size
- *
- * @return ciphertext
  */
-char *rsa_encrypt(char plaintext[])
-{
-    char *ciphertext = (char *)calloc(strlen(plaintext) + 1, sizeof(char));
 
+void rsa_encrypt(char plaintext[])
+{
     // Two prime numbers
     int p;
     int q;
@@ -91,34 +115,29 @@ char *rsa_encrypt(char plaintext[])
             int c = bignum_to_int(&C);
 
             //  Convert it to its orignal ascii
-            ciphertext[i] = isupper(plaintext[i]) ? c + 'A' - 1 : c + 'a' - 1;
+            plaintext[i] = isupper(plaintext[i]) ? c + 'A' - 1 : c + 'a' - 1;
         }
         else
         {
-            ciphertext[i] = plaintext[i];
+            plaintext[i] = plaintext[i];
         }
     }
-
-    return ciphertext;
 }
 
 /*
- * Decrypt the ciphertext
+ * Decrypt the ciphertext via RSA
  *
  * @param ciphertext
- * @param public_key_str
- *
- * @return plaintext
+ * @param key
  */
-char *rsa_decrypt(char ciphertext[], char public_key_str[])
-{
-    char *plaintext = (char *)calloc(MAX_SIZE, sizeof(char));
 
+void rsa_decrypt(char ciphertext[], char key[])
+{
     char delim[] = ",";
     char *token;
 
     // Get the d
-    char *d_str = strtok(public_key_str, delim);
+    char *d_str = strtok(key, delim);
     int d = atol(d_str);
 
     // Get the n
@@ -143,7 +162,7 @@ char *rsa_decrypt(char ciphertext[], char public_key_str[])
 
     // Decryption
     int i;
-    for (i = 0; ciphertext[i] != '\0'; i++)
+    for (i = 0; i < strlen(ciphertext); i++)
     {
         if (isalpha(ciphertext[i]))
         {
@@ -159,15 +178,33 @@ char *rsa_decrypt(char ciphertext[], char public_key_str[])
             int m = bignum_to_int(&M);
 
             //  Convert it to its orignal ascii
-            plaintext[i] = isupper(ciphertext[i]) ? m + 'A' - 1 : m + 'a' - 1;
+            ciphertext[i] = isupper(ciphertext[i]) ? m + 'A' - 1 : m + 'a' - 1;
         }
         else
         {
-            plaintext[i] = ciphertext[i];
+            ciphertext[i] = ciphertext[i];
         }
     }
+}
 
-    return plaintext;
+/*
+ * Encrypt/Decrypt the text via Atbash
+ *
+ * @param text
+ */
+
+void atbash(char text[])
+{
+    int i;
+
+    for (i = 0; i < strlen(text); i++)
+    {
+        if (isalpha(text[i]))
+        {
+            text[i] =
+                islower(text[i]) ? 'z' - (text[i] - 'a') : 'Z' - (text[i] - 'A');
+        }
+    }
 }
 
 /************************************************************************************************************************
@@ -178,6 +215,7 @@ char *rsa_decrypt(char ciphertext[], char public_key_str[])
  * E must be less than t
  * E must be coprime with n and t
  */
+
 int calculateE(int n, int t)
 {
     int e;
@@ -198,6 +236,7 @@ int calculateE(int n, int t)
  * Display all candidates when m mod t is 1
  * Allow user to select a d value from the displayed d candidates
  */
+
 int calculateD(int e, int t)
 {
     int d, m, val;
@@ -218,56 +257,30 @@ int calculateD(int e, int t)
 }
 
 /*
- * Convert plaintext to numbers
+ * Format text in numbers
  *
- * @param plaintext_str Plaintext in letters
- * @return Plaintext in numbers
+ * @param text: text in string
+ * @return textNum: text in numbers
  */
-int *formatPlaintext(char text[])
-{
-    int i, j;
-    int len = strlen(text);
-    int *num = (int *)calloc(len + 1, sizeof(int));
 
-    for (i = 0; i < len; i++)
-    {
-        if (isalpha(text[i]))
-        {
-            num[i] = toupper(text[i]) - 'A' + 1;
-        }
-        else
-        {
-            num[i] = ' ';
-        }
-    }
-
-    return num;
-}
-
-/*
- * Format ciphertext to numbers
- *
- * @param text: ciphertext in string
- * @return: ciphertext in numbers
- */
-int *formatCiphertext(char text[])
+int *formatTextInNum(char text[])
 {
     int i;
-    int *ciphertext = (int *)calloc(MAX_SIZE, sizeof(int));
+    int *textNum = (int *)calloc(strlen(text) + 1, sizeof(int));
 
     for (i = 0; i < strlen(text); i++)
     {
         if (isalpha(text[i]))
         {
-            ciphertext[i] = toupper(text[i]) - 'A' + 1;
+            textNum[i] = toupper(text[i]) - 'A' + 1;
         }
         else
         {
-            ciphertext[i] = 32;
+            textNum[i] = text[i];
         }
     }
 
-    return ciphertext;
+    return textNum;
 }
 
 /************************************************************************************************************************
@@ -281,6 +294,7 @@ int *formatCiphertext(char text[])
  *
  * @return 1 if the text is read successfully, 0 otherwise.
  */
+
 int getTextFromFile(char text[], char type[])
 {
     char filename[MAX_SIZE];
@@ -307,6 +321,7 @@ int getTextFromFile(char text[], char type[])
  * @param text The text to be saved to the file.
  * @param type The type of the text.
  */
+
 void saveTextToFile(char text[], char type[])
 {
     char filename[MAX_SIZE];
@@ -332,6 +347,7 @@ void saveTextToFile(char text[], char type[])
  *
  * @param text The text to be printed.
  */
+
 void displayNumText(int text[])
 {
     for (int i = 0; text[i] != '\0'; i++)
@@ -343,13 +359,14 @@ void displayNumText(int text[])
 /*
  * This function displays the menu.
  */
+
 int menu()
 {
     int choice;
 
-    printf("---------------\n");
-    printf("RSA Cryptograph\n");
-    printf("---------------\n");
+    printf("-----------------\n");
+    printf("Van's Cryptograph\n");
+    printf("-----------------\n");
     printf("[1] Encrypt\n");
     printf("[2] Decrypt\n");
     printf("[3] Exit\n");

@@ -17,14 +17,17 @@
 #define MAX_D 300
 
 // Function Prototypes
-char *rsa_encrypt(char plaintext[]);
-char *rsa_decrypt(char ciphertext[], char public_key_str[]);
+char *encrypt(char plaintext[]);
+char *decrypt(char ciphertext[], char key[]);
+
+void rsa_encrypt(char plaintext[]);
+void rsa_decrypt(char ciphertext[], char key[]);
+void atbash(char text[]);
 
 int calculateE(int n, int t);
 int calculateD(int e, int t);
 
-int *formatPlaintext(char text[]);
-int *formatCiphertext(char text[]);
+int *formatTextInNum(char text[]);
 
 int getTextFromFile(char text[], char type[]);
 void saveTextToFile(char text[], char type[]);
