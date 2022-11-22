@@ -203,10 +203,11 @@ void atbash(char text[])
     {
         if (isalpha(text[i]))
         {
-            text[i] =
-                islower(text[i]) ? 'z' - (text[i] - 'a') : 'Z' - (text[i] - 'A');
+            text[i] = isupper(text[i]) ? 'Z' - (text[i] - 'A') : 'z' - (text[i] - 'a');
         }
     }
+
+    strrev(text);
 }
 
 /************************************************************************************************************************
