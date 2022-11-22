@@ -11,7 +11,6 @@
 
 int menu();
 
-void pow_mod_faster(struct bn *a, struct bn *b, struct bn *n, struct bn *res);
 int calculateE(int, int);
 int calculateD(int, int);
 
@@ -128,44 +127,6 @@ int menu()
   fflush(stdin);
 
   return choice;
-}
-
-/*
- * Implement exponentiation function
- *
- * @param base
- * @param exponent
- *
- * @return base^exponent
- */
-
-/* O(log n) */
-void pow_mod_faster(struct bn *a, struct bn *b, struct bn *n, struct bn *res)
-{
-  bignum_from_int(res, 1); /* r = 1 */
-
-  struct bn tmpa;
-  struct bn tmpb;
-  struct bn tmp;
-  bignum_assign(&tmpa, a);
-  bignum_assign(&tmpb, b);
-
-  while (1)
-  {
-    if (tmpb.array[0] & 1) /* if (b % 2) */
-    {
-      bignum_mul(res, &tmpa, &tmp); /*   r = r * a % m */
-      bignum_mod(&tmp, n, res);
-    }
-    bignum_rshift(&tmpb, &tmp, 1); /* b /= 2 */
-    bignum_assign(&tmpb, &tmp);
-
-    if (bignum_is_zero(&tmpb))
-      break;
-
-    bignum_mul(&tmpa, &tmpa, &tmp);
-    bignum_mod(&tmp, n, &tmpa);
-  }
 }
 
 /*
@@ -295,7 +256,7 @@ char *encrypt(char plaintext[])
   int e = calculateE(n, t);
   int d = calculateD(e, t);
 
-  // Debugging purpose
+  // For debugging purpose
   // printf("e: %d\nd: %d\nt: %d\nn: %d\n", e, d, t, n);
 
   // delimiter
@@ -314,6 +275,10 @@ char *encrypt(char plaintext[])
   saveTextToFile(public_key_str, "public key");
 
   // Declare bignum variables
+  // M -> plaintext
+  // C -> ciphertext
+  // E -> public key 1, exponent
+  // N -> public key 2, modulus
   struct bn M, C, E, N;
 
   // Initialize bignum variables
@@ -334,7 +299,7 @@ char *encrypt(char plaintext[])
       bignum_from_int(&N, n);
 
       // Calculate C = (M ^ E) % N
-      pow_mod_faster(&M, &E, &N, &C);
+      bignum_pow_mod(&M, &E, &N, &C);
 
       // Convert C to int
       int c = bignum_to_int(&C);
@@ -374,10 +339,14 @@ char *decrypt(char ciphertext[], char public_key_str[])
   char *n_str = strtok(NULL, delim);
   int n = atol(n_str);
 
-  // Debugging purpose
+  // For debugging purpose
   // printf("d: %d\nn: %d\n", d, n);
 
   // Declare bignum variables
+  // M -> plaintext
+  // C -> ciphertext
+  // D -> private key 1, exponent
+  // N -> private key 2, modulus
   struct bn M, C, D, N;
 
   // Initialize bignum variables
@@ -392,18 +361,18 @@ char *decrypt(char ciphertext[], char public_key_str[])
   {
     if (isalpha(ciphertext[i]))
     {
-      // Assign bignum variables
+      // Assign bignum
       bignum_from_int(&C, toupper(ciphertext[i]) - 'A' + 1);
       bignum_from_int(&D, d);
       bignum_from_int(&N, n);
 
       // Calculate M = (C ^ D) % N
-      pow_mod_faster(&C, &D, &N, &M);
+      bignum_pow_mod(&C, &D, &N, &M);
 
       // Convert M to int
       int m = bignum_to_int(&M);
 
-      // Convert it to its orignal ascii
+      //  Convert it to its orignal ascii
       plaintext[i] = isupper(ciphertext[i]) ? m + 'A' - 1 : m + 'a' - 1;
     }
     else
