@@ -7,7 +7,7 @@
 #include "bn.c"
 
 #define MAX_ALPHA 26
-#define MAX_SIZE 255
+#define MAX_SIZE 999
 
 int menu();
 
