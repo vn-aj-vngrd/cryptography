@@ -4,10 +4,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Utilize a library to store and manipulate large numbers
 #include "bn.c"
 
 #define MAX_ALPHA 26
-#define MAX_SIZE 999
+#define MAX_SIZE 256
 
 int menu();
 
