@@ -319,6 +319,8 @@ int calculateD(int e, int t)
 {
   int d, m, val;
 
+  printf("List of d candidates: ");
+
   for (d = 1, m = e; d < MAX_D; m += e, d++)
   {
     if (d != e && m % t == 1)
@@ -327,7 +329,7 @@ int calculateD(int e, int t)
     }
   }
 
-  printf("\nChoose a d value from above: ");
+  printf("\nChoose one d candidate from above: ");
   scanf("%d", &val);
   fflush(stdin);
 
