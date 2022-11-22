@@ -123,7 +123,6 @@ int main()
  * Encrypt the plaintext
  *
  * @param plaintext
- * @param size
  *
  * @return ciphertext
  */
