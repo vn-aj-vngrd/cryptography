@@ -130,15 +130,20 @@ int menu()
 
 /*
  * Implement exponentiation function
+ *
+ * @param base
+ * @param exponent
+ *
+ * @return base^exponent
  */
 
-unsigned long long int power(unsigned long long int num, unsigned long long int pow)
+unsigned long long int power(unsigned long long int base, unsigned long long int exponent)
 {
   unsigned long long int result = 1;
   int i;
-  for (i = 0; i < pow; i++)
+  for (i = 0; i < exponent; i++)
   {
-    result *= num;
+    result *= base;
   }
 
   return result;
