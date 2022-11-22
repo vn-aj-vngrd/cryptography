@@ -38,10 +38,10 @@ int main()
 
       if (r)
       {
-        // Plaintext in letters
+        // Display Plaintext in letters
         printf("Plaintext: %s", plaintext_str);
 
-        // Plaintext in numbers
+        // Display Plaintext in numbers
         int *plaintext_num = formatPlaintext(plaintext_str);
         printf("Plaintext in numbers: ");
         displayNumText(plaintext_num);
@@ -65,21 +65,24 @@ int main()
 
       if (r1)
       {
-        // Ciphertext
+        // Display Ciphertext in letters
         printf("Ciphertext: %s", ciphertext_str);
+
+        // Display Ciphertext in numbers
         int *ciphertext_num = formatCiphertext(ciphertext_str);
         printf("Ciphertext in numbers: ");
         displayNumText(ciphertext_num);
         printf("\n\n");
 
-        char public_key_str[MAX_SIZE];
-        int r2 = getTextFromFile(public_key_str, "key");
+        char key_str[MAX_SIZE];
+        int r2 = getTextFromFile(key_str, "key");
         if (r2)
         {
-          printf("Public key: %s\n", public_key_str);
+          // Display Key
+          printf("Key: %s\n", key_str);
 
           // Decryption Process
-          char *plaintext = decrypt(ciphertext_str, public_key_str);
+          char *plaintext = decrypt(ciphertext_str, key_str);
           printf("\nPlaintext: %s", plaintext);
 
           // Save plaintext to file
