@@ -264,14 +264,22 @@ char *encrypt(char plaintext[])
   // delimiter
   char delim = ',';
 
+  int delim_size = 1;
+  int e_size = floor(log10(abs(e))) + 1;
+  int d_size = floor(log10(abs(d))) + 1;
+  int n_size = floor(log10(abs(n))) + 1;
+
+  int private_key_size = e_size + delim_size + n_size + 1;
+  int public_key_size = d_size + delim_size + n_size + 1;
+
   // Save private key
-  char private_key_str[MAX_SIZE];
+  char *private_key = (char *)calloc(private_key_size, sizeof(char));
   sprintf(private_key_str, "%d%c%d", e, delim, n);
   printf("\nPrivate Key: %s\n", private_key_str);
   saveTextToFile(private_key_str, "private key");
 
   // Save public key
-  char public_key_str[MAX_SIZE];
+  char *public_key = (char *)calloc(public_key_size, sizeof(char));
   sprintf(public_key_str, "%d%c%d", d, delim, n);
   printf("\n\nPublic Key: %s\n", public_key_str);
   saveTextToFile(public_key_str, "public key");
