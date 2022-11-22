@@ -274,15 +274,15 @@ char *encrypt(char plaintext[])
 
   // Save private key
   char *private_key = (char *)calloc(private_key_size, sizeof(char));
-  sprintf(private_key_str, "%d%c%d", e, delim, n);
-  printf("\nPrivate Key: %s\n", private_key_str);
-  saveTextToFile(private_key_str, "private key");
+  sprintf(private_key, "%d%c%d", e, delim, n);
+  printf("\nPrivate Key: %s\n", private_key);
+  saveTextToFile(private_key, "private key");
 
   // Save public key
   char *public_key = (char *)calloc(public_key_size, sizeof(char));
-  sprintf(public_key_str, "%d%c%d", d, delim, n);
-  printf("\n\nPublic Key: %s\n", public_key_str);
-  saveTextToFile(public_key_str, "public key");
+  sprintf(public_key, "%d%c%d", d, delim, n);
+  printf("\n\nPublic Key: %s\n", public_key);
+  saveTextToFile(public_key, "public key");
 
   // Declare bignum variables
   // M -> plaintext
