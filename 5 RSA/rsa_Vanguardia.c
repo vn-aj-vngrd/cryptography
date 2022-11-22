@@ -240,11 +240,11 @@ char *encrypt(char plaintext[])
 {
   char *ciphertext = (char *)calloc(strlen(plaintext) + 1, sizeof(char));
 
-  // Two random prime numbers
+  // Two prime numbers
   int p;
   int q;
 
-  printf("\n\nEnter two prime numbers (p and q): ");
+  printf("\n\nEnter two different prime numbers (p and q): ");
   scanf("%d %d", &p, &q);
   fflush(stdin);
 
