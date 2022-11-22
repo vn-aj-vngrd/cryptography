@@ -12,7 +12,7 @@
 #define MAX_D 300
 
 char *encrypt(char plaintext[]);
-char *decrypt(char ciphertext[], char public_key_str[]);
+char *decrypt(char ciphertext[], char key[]);
 
 int calculateE(int n, int t);
 int calculateD(int e, int t);
@@ -221,12 +221,12 @@ char *encrypt(char plaintext[])
  * Decrypt the ciphertext
  *
  * @param ciphertext
- * @param public_key_str
+ * @param key
  *
  * @return plaintext
  */
 
-char *decrypt(char ciphertext[], char public_key_str[])
+char *decrypt(char ciphertext[], char key[])
 {
   char *plaintext = (char *)calloc(MAX_SIZE, sizeof(char));
 
@@ -234,7 +234,7 @@ char *decrypt(char ciphertext[], char public_key_str[])
   char *token;
 
   // Get the d
-  char *d_str = strtok(public_key_str, delim);
+  char *d_str = strtok(key, delim);
   int d = atol(d_str);
 
   // Get the n
