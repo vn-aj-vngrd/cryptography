@@ -17,8 +17,7 @@ char *decrypt(char ciphertext[], char key[]);
 int calculateE(int n, int t);
 int calculateD(int e, int t);
 
-int *formatPlaintext(char text[]);
-int *formatCiphertext(char text[]);
+int *formatTextInNum(char text[]);
 
 int getTextFromFile(char text[], char type[]);
 void saveTextToFile(char text[], char type[]);
@@ -43,7 +42,7 @@ int main()
         printf("Plaintext: %s\n", plaintext_str);
 
         // Display Plaintext in numbers
-        int *plaintext_num = formatPlaintext(plaintext_str);
+        int *plaintext_num = formatTextInNum(plaintext_str);
         printf("Plaintext in numbers: ");
         displayNumText(plaintext_num);
 
@@ -70,7 +69,7 @@ int main()
         printf("Ciphertext: %s\n", ciphertext_str);
 
         // Display Ciphertext in numbers
-        int *ciphertext_num = formatCiphertext(ciphertext_str);
+        int *ciphertext_num = formatTextInNum(ciphertext_str);
         printf("Ciphertext in numbers: ");
         displayNumText(ciphertext_num);
         printf("\n\n");
@@ -336,58 +335,30 @@ int calculateD(int e, int t)
 }
 
 /*
- * Convert plaintext to numbers
+ * Format text in numbers
  *
- * @param plaintext_str Plaintext in letters
- * @return Plaintext in numbers
+ * @param text: text in string
+ * @return textNum: text in numbers
  */
 
-int *formatPlaintext(char text[])
-{
-  int i, j;
-  int len = strlen(text);
-  int *num = (int *)calloc(len + 1, sizeof(int));
-
-  for (i = 0; i < len; i++)
-  {
-    if (isalpha(text[i]))
-    {
-      num[i] = toupper(text[i]) - 'A' + 1;
-    }
-    else
-    {
-      num[i] = ' ';
-    }
-  }
-
-  return num;
-}
-
-/*
- * Format ciphertext to numbers
- *
- * @param text: ciphertext in string
- * @return: ciphertext in numbers
- */
-
-int *formatCiphertext(char text[])
+int *formatTextInNum(char text[])
 {
   int i;
-  int *ciphertext = (int *)calloc(MAX_SIZE, sizeof(int));
+  int *textNum = (int *)calloc(strlen(text) + 1, sizeof(int));
 
   for (i = 0; i < strlen(text); i++)
   {
     if (isalpha(text[i]))
     {
-      ciphertext[i] = toupper(text[i]) - 'A' + 1;
+      textNum[i] = toupper(text[i]) - 'A' + 1;
     }
     else
     {
-      ciphertext[i] = 32;
+      textNum[i] = text[i];
     }
   }
 
-  return ciphertext;
+  return textNum;
 }
 
 /************************************************************************************************************************
