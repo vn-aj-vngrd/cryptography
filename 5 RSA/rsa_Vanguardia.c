@@ -67,7 +67,7 @@ int main()
       if (r1)
       {
         // Display Ciphertext in letters
-        printf("Ciphertext: %s", ciphertext_str);
+        printf("Ciphertext: %s\n", ciphertext_str);
 
         // Display Ciphertext in numbers
         int *ciphertext_num = formatCiphertext(ciphertext_str);
@@ -259,7 +259,7 @@ char *decrypt(char ciphertext[], char key[])
 
   // Decryption
   int i;
-  for (i = 0; ciphertext[i] != '\0'; i++)
+  for (i = 0; i < strlen(ciphertext); i++)
   {
     if (isalpha(ciphertext[i]))
     {
