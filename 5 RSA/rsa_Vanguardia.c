@@ -134,8 +134,12 @@ char *encrypt(char plaintext[])
   int p;
   int q;
 
-  printf("\n\nEnter two different prime numbers (p and q): ");
-  scanf("%d %d", &p, &q);
+  printf("\n\nEnter first prime number (p): ");
+  scanf("%d", &p);
+  fflush(stdin);
+
+  printf("Enter second prime number (q): ");
+  scanf("%d", &q);
   fflush(stdin);
 
   // Let N = p * q
@@ -159,18 +163,18 @@ char *encrypt(char plaintext[])
   int d_size = floor(log10(abs(d))) + 1;
   int n_size = floor(log10(abs(n))) + 1;
 
-  int private_key_size = e_size + delim_size + n_size + 1;
-  int public_key_size = d_size + delim_size + n_size + 1;
+  int private_key_size = d_size + delim_size + n_size + 1;
+  int public_key_size = e_size + delim_size + n_size + 1;
 
   // Save private key
   char *private_key = (char *)calloc(private_key_size, sizeof(char));
-  sprintf(private_key, "%d%c%d", e, delim, n);
+  sprintf(private_key, "%d%c%d", d, delim, n);
   printf("\nPrivate Key: %s\n", private_key);
   saveTextToFile(private_key, "private key");
 
   // Save public key
   char *public_key = (char *)calloc(public_key_size, sizeof(char));
-  sprintf(public_key, "%d%c%d", d, delim, n);
+  sprintf(public_key, "%d%c%d", e, delim, n);
   printf("\n\nPublic Key: %s\n", public_key);
   saveTextToFile(public_key, "public key");
 
@@ -296,15 +300,23 @@ char *decrypt(char ciphertext[], char key[])
 
 int calculateE(int n, int t)
 {
-  int e;
+  int e, val;
+
+  printf("\nList of e candidates: ");
 
   for (e = 2; e < t; e++)
   {
     if (e % 2 != 0 && (n % e) != 0 && (t % e) != 0)
     {
-      return e;
+      printf("%d ", e);
     }
   }
+
+  printf("\nChoose an e: ");
+  scanf("%d", &val);
+  fflush(stdin);
+
+  return val;
 
   return -1;
 }
@@ -319,17 +331,19 @@ int calculateD(int e, int t)
 {
   int d, m, val;
 
-  printf("List of d candidates: ");
+  printf("\nList of d candidates: ");
 
-  for (d = 1, m = e; d < MAX_D; m += e, d++)
+  for (d = 1; d < MAX_D; d++)
   {
-    if (d != e && m % t == 1)
+    if ((e * d ) % 6 == 1)
     {
       printf("%d ", d);
     }
   }
 
-  printf("\nChoose one d candidate from above: ");
+  printf("... ");
+
+  printf("\nChoose a d: ");
   scanf("%d", &val);
   fflush(stdin);
 
