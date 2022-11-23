@@ -71,18 +71,18 @@ void rsa_encrypt(char plaintext[])
     int d_size = floor(log10(abs(d))) + 1;
     int n_size = floor(log10(abs(n))) + 1;
 
-    int private_key_size = e_size + delim_size + n_size + 1;
-    int public_key_size = d_size + delim_size + n_size + 1;
+    int private_key_size = d_size + delim_size + n_size + 1;
+    int public_key_size = e_size + delim_size + n_size + 1;
 
     // Save private key
     char *private_key = (char *)calloc(private_key_size, sizeof(char));
-    sprintf(private_key, "%d%c%d", e, delim, n);
+    sprintf(private_key, "%d%c%d", d, delim, n);
     printf("\nPrivate Key: %s\n", private_key);
     saveTextToFile(private_key, "private key");
 
     // Save public key
     char *public_key = (char *)calloc(public_key_size, sizeof(char));
-    sprintf(public_key, "%d%c%d", d, delim, n);
+    sprintf(public_key, "%d%c%d", e, delim, n);
     printf("\n\nPublic Key: %s\n", public_key);
     saveTextToFile(public_key, "public key");
 
