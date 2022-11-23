@@ -24,9 +24,9 @@ void rsa_encrypt(char plaintext[]);
 void rsa_decrypt(char ciphertext[], char key[]);
 void atbash(char text[]);
 
+int gcd(int a, int b);
 int calculateE(int n, int t);
 int calculateD(int e, int t);
-
 int *formatTextInNum(char text[]);
 
 int getTextFromFile(char text[], char type[]);

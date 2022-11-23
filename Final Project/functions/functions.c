@@ -215,46 +215,73 @@ void atbash(char text[])
  ************************************************************************************************************************/
 
 /*
+ * Implement gcd
+ *
+ * @param a
+ * @param b
+ *
+ * @return gcd
+ */
+
+int gcd(int a, int b)
+{
+    if (b == 0)
+        return a;
+
+    return gcd(b, a % b);
+}
+
+/*
  * E must be less than t
  * E must be coprime with n and t
  */
 
 int calculateE(int n, int t)
 {
-    int e;
+    int e, val;
 
+    printf("\nList of e candidates: ");
+
+    // print all the e candidates
     for (e = 2; e < t; e++)
     {
-        if (e % 2 != 0 && (n % e) != 0 && (t % e) != 0)
+        if (gcd(e, t) == 1)
         {
-            return e;
+            printf("%d ", e);
         }
     }
+
+    // printf("65537");
+    printf("\nChoose an e: ");
+    scanf("%d", &val);
+    fflush(stdin);
+
+    return val;
 
     return -1;
 }
 
 /*
- * loop through the multiples of e
- * Display all candidates when m mod t is 1
- * Allow user to select a d value from the displayed d candidates
+ * Should be (e * d ) % t == 1
  */
 
 int calculateD(int e, int t)
 {
     int d, m, val;
 
-    printf("List of d candidates: ");
+    printf("\nList of d candidates: ");
 
-    for (d = 1, m = e; d < MAX_D; m += e, d++)
+    for (d = 1; d < MAX_D; d++)
     {
-        if (d != e && m % t == 1)
+        if ((e * d) % t == 1)
         {
             printf("%d ", d);
         }
     }
 
-    printf("\nChoose one d candidate from above: ");
+    printf("... ");
+
+    printf("\nChoose a d: ");
     scanf("%d", &val);
     fflush(stdin);
 

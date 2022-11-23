@@ -296,6 +296,11 @@ char *decrypt(char ciphertext[], char key[])
 
 /*
  * Implement gcd
+ *
+ * @param a
+ * @param b
+ *
+ * @return gcd
  */
 
 int gcd(int a, int b)
@@ -346,7 +351,7 @@ int calculateD(int e, int t)
 
   printf("\nList of d candidates: ");
 
-  for (d = 1; d < MAX_D d++)
+  for (d = 1; d < MAX_D; d++)
   {
     if ((e * d) % t == 1)
     {
