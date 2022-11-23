@@ -14,6 +14,7 @@
 char *encrypt(char plaintext[]);
 char *decrypt(char ciphertext[], char key[]);
 
+int gcd(int a, int b);
 int calculateE(int n, int t);
 int calculateD(int e, int t);
 
@@ -294,6 +295,18 @@ char *decrypt(char ciphertext[], char key[])
  ************************************************************************************************************************/
 
 /*
+ * Implement gcd
+ */
+
+int gcd(int a, int b)
+{
+  if (b == 0)
+    return a;
+
+  return gcd(b, a % b);
+}
+
+/*
  * E must be less than t
  * E must be coprime with n and t
  */
@@ -304,16 +317,16 @@ int calculateE(int n, int t)
 
   printf("\nList of e candidates: ");
 
+  // print all the e candidates
   for (e = 2; e < t; e++)
   {
-    if (e % 2 != 0 && (n % e) != 0 && (t % e) != 0)
+    if (gcd(e, t) == 1)
     {
       printf("%d ", e);
     }
   }
 
   // printf("65537");
-
   printf("\nChoose an e: ");
   scanf("%d", &val);
   fflush(stdin);
@@ -333,7 +346,7 @@ int calculateD(int e, int t)
 
   printf("\nList of d candidates: ");
 
-  for (d = 1; d < MAX_D; d++)
+  for (d = 1; d < MAX_D d++)
   {
     if ((e * d) % t == 1)
     {
