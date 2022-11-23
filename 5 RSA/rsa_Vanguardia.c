@@ -201,7 +201,7 @@ char *encrypt(char plaintext[])
       // Calculate C = (M ^ E) % N
       bignum_pow_mod(&M, &E, &N, &C);
 
-      // Convert C to int
+      // Convert C to int and mod 26
       int c = bignum_to_int(&C) % 26;
 
       //  Convert it to its orignal ascii
@@ -270,7 +270,7 @@ char *decrypt(char ciphertext[], char key[])
       // Calculate M = (C ^ D) % N
       bignum_pow_mod(&C, &D, &N, &M);
 
-      // Convert M to int
+      // Convert M to int and mod 26
       int m = bignum_to_int(&M) % 26;
 
       //  Convert it to its orignal ascii
