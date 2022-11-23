@@ -257,8 +257,6 @@ int calculateE(int n, int t)
     fflush(stdin);
 
     return val;
-
-    return -1;
 }
 
 /*
