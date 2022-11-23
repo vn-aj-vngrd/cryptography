@@ -9,7 +9,7 @@
 
 #define MAX_ALPHA 26
 #define MAX_SIZE 256
-#define MAX_D 2048
+#define MAX_D 1024
 
 char *encrypt(char plaintext[]);
 char *decrypt(char ciphertext[], char key[]);
@@ -312,6 +312,8 @@ int calculateE(int n, int t)
     }
   }
 
+  // printf("65537");
+
   printf("\nChoose an e: ");
   scanf("%d", &val);
   fflush(stdin);
@@ -322,9 +324,7 @@ int calculateE(int n, int t)
 }
 
 /*
- * loop through the multiples of e
- * Display all candidates when m mod t is 1
- * Allow user to select a d value from the displayed d candidates
+ * Should be (e * d ) % t == 1
  */
 
 int calculateD(int e, int t)
@@ -335,7 +335,7 @@ int calculateD(int e, int t)
 
   for (d = 1; d < MAX_D; d++)
   {
-    if ((e * d ) % 6 == 1)
+    if ((e * d) % t == 1)
     {
       printf("%d ", d);
     }
