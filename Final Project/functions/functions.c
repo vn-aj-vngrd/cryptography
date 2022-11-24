@@ -207,7 +207,7 @@ void atbash(char text[])
         }
     }
 
-    strrev(text);
+    strReverse(text);
 }
 
 /************************************************************************************************************************
@@ -311,6 +311,25 @@ int *formatTextInNum(char text[])
     }
 
     return textNum;
+}
+
+/*
+ * Format text in reverse
+ *
+ * @param text: text in string
+ */
+
+void strReverse(char text[])
+{
+    int i, j;
+    char temp;
+
+    for (i = 0, j = strlen(text) - 1; i < j; i++, j--)
+    {
+        temp = text[i];
+        text[i] = text[j];
+        text[j] = temp;
+    }
 }
 
 /************************************************************************************************************************

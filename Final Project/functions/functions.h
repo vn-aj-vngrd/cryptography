@@ -28,6 +28,7 @@ int gcd(int a, int b);
 int calculateE(int n, int t);
 int calculateD(int e, int t);
 int *formatTextInNum(char text[]);
+void strReverse(char text[]);
 
 int getTextFromFile(char text[], char type[]);
 void saveTextToFile(char text[], char type[]);
