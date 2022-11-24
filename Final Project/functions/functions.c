@@ -41,10 +41,7 @@ char *decrypt(char ciphertext[], char key[])
 void rsa_encrypt(char plaintext[])
 {
     // Two prime numbers
-    int p;
-    int q;
-    int r;
-    int s;
+    int p, q, r, s;
 
     printf("\n\nEnter 4 different prime numbers: ");
     scanf("%d %d %d %d", &p, &q, &r, &s);

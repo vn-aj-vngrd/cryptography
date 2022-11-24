@@ -132,8 +132,7 @@ char *encrypt(char plaintext[])
   char *ciphertext = (char *)calloc(strlen(plaintext) + 1, sizeof(char));
 
   // Two prime numbers
-  int p;
-  int q;
+  int p, q;
 
   printf("\n\nEnter first prime number (p): ");
   scanf("%d", &p);
