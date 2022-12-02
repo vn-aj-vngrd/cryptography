@@ -16,7 +16,7 @@ int main()
             if (r)
             {
                 // Display Plaintext in letters
-                printf("Plaintext: %s\n", plaintext_str);
+                printf("\nPlaintext: %s\n", plaintext_str);
 
                 // Display Plaintext in numbers
                 int *plaintext_num = formatTextInNum(plaintext_str);
@@ -43,13 +43,13 @@ int main()
             if (r1)
             {
                 // Display Ciphertext in letters
-                printf("Ciphertext: %s\n", ciphertext_str);
+                printf("\nCiphertext: %s\n", ciphertext_str);
 
                 // Display Ciphertext in numbers
                 int *ciphertext_num = formatTextInNum(ciphertext_str);
                 printf("Ciphertext in numbers: ");
                 displayNumText(ciphertext_num);
-                printf("\n\n");
+                printf("\n");
 
                 char key_str[MAX_SIZE];
                 int r2 = getTextFromFile(key_str, "key");

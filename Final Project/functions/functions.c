@@ -43,7 +43,7 @@ void rsa_encrypt(char plaintext[])
     // Two prime numbers
     int p, q, r, s;
 
-    printf("\n\nEnter 4 different prime numbers: ");
+    printf("\n\nEnter 4 different prime numbers\n> ");
     scanf("%d %d %d %d", &p, &q, &r, &s);
     fflush(stdin);
 
@@ -248,8 +248,8 @@ int calculateE(int n, int t)
         }
     }
 
-    // printf("65537");
-    printf("\nChoose an e: ");
+    printf("...");
+    printf("\nChoose an e\n> ");
     scanf("%d", &val);
     fflush(stdin);
 
@@ -274,9 +274,9 @@ int calculateD(int e, int t)
         }
     }
 
-    printf("... ");
+    printf("...");
 
-    printf("\nChoose a d: ");
+    printf("\nChoose a d\n> ");
     scanf("%d", &val);
     fflush(stdin);
 
@@ -345,7 +345,7 @@ int getTextFromFile(char text[], char type[])
 {
     char filename[MAX_SIZE];
 
-    printf("Enter filename to open %s: ", type);
+    printf("\nEnter filename to open %s\n> ", type);
     scanf("%[^\n]", filename);
     fflush(stdin);
 
@@ -372,7 +372,7 @@ void saveTextToFile(char text[], char type[])
 {
     char filename[MAX_SIZE];
 
-    printf("Enter filename to save %s: ", type);
+    printf("Enter filename to save %s\n> ", type);
     scanf("%[^\n]", filename);
     fflush(stdin);
 
@@ -416,7 +416,7 @@ int menu()
     printf("[1] Encrypt\n");
     printf("[2] Decrypt\n");
     printf("[3] Exit\n");
-    printf("\nSelect: ");
+    printf("\nSelect an option\n> ");
 
     scanf("%d", &choice);
     fflush(stdin);
